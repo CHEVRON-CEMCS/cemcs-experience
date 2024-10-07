@@ -31,7 +31,7 @@ function LandingHero() {
                         <Button
                             className="h-12 w-44 rounded-md"
                         >
-                            Reservations
+                            Travels
                         </Button>
                     </Link>
                 </div>
