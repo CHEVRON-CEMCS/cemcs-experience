@@ -5,8 +5,8 @@ import Image from "next/image";
 
 export function ImageSlider() {
     const images = [
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "https://images.unsplash.com/photo-1627483262769-04d0a1401487?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "/image1.jpg",
+        "/image2.jpg"
       ];
 
   const [mainImageIndex, setMainImageIndex] = useState(0);
