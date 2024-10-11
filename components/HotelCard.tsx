@@ -8,7 +8,7 @@ export function HotelCard() {
     <div className="rounded-lg">
       <div className="relative h-[250px]">
         <Image
-          src="/shop-cap.jpg"
+          src="/hotelimage.jpg"
           alt="Product Image"
           fill
           className="object-cover object-center w-full h-full rounded-lg"
@@ -26,7 +26,7 @@ export function HotelCard() {
       </p>
 
       <Button asChild className="w-full mt-5">
-        <Link href={`/productdetails`}>View Product Details</Link>
+        <Link href={`/hoteldetails`}>View Details</Link>
       </Button>
     </div>
   );

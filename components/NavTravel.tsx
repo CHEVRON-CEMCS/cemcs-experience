@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/sheet"
 import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
+import { NavbarTravelLinks } from "./NavbarTravelLinks";
 
 
 export function NavTravel() {
@@ -23,7 +24,7 @@ export function NavTravel() {
             CEMCS<span className="text-blue-500">Travels</span>
           </h1>
         </Link>
-        <NavbarLinks />
+        <NavbarTravelLinks />
       </div>
 
       

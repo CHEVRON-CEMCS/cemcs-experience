@@ -74,7 +74,7 @@ export function ReservationSlider() {
         </div>
       </div>
 
-      <div className="relative">
+      <div className="relative hidden">
         <div 
           ref={thumbnailsRef}
           className="flex gap-4 overflow-x-auto scrollbar-hide"
