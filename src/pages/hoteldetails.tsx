@@ -135,7 +135,7 @@ const hoteldetails = () => {
               <div className="w-full xl:w-2/3 ">
               <div className="w-11/12">
                   <h1 className="mb-4 text-lg font-bold text-gray-800">
-                    Tour Description
+                    Hotel Description
                   </h1>
                   
                   <p className="text-sm  text-justify font-normal leading-6 text-gray-600 ">

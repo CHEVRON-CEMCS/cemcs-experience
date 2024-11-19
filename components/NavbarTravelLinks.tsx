@@ -15,16 +15,16 @@ export const navbarTravelLinks = [
     name: "Bookings",
     href: "/bookings",
   },
-  // {
-  //   id: 2,
-  //   name: "Men",
-  //   href: "/products/men",
-  // },
-  // {
-  //   id: 3,
-  //   name: "Women",
-  //   href: "/products/women",
-  // },
+  {
+    id: 2,
+    name: "Book Flight",
+    href: "/travel",
+  },
+  {
+    id: 3,
+    name: "Tour Packages",
+    href: "/tourPackage",
+  },
   // {
   //   id: 4,
   //   name: "Kids",
