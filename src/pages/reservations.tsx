@@ -6,6 +6,7 @@ import { NavTravel } from '../../components/NavTravel'
 import SmallCard from '../../components/SmallCard'
 import LargeCard from '../../components/LargeCard'
 import Footer from '../../components/Footer'
+import { AppleCardsCarouselDemo } from '../../components/AppleCardsCarousel'
 
 const Reservations = () => {
   // Local array of card data
@@ -51,6 +52,9 @@ const Reservations = () => {
                 <HotelCard />
             </div>
             <div>
+                <AppleCardsCarouselDemo />
+              </div>
+            <div>
             <LargeCard 
         img="/large.jpg"
         title="The Greatest Outdoors"
@@ -58,6 +62,9 @@ const Reservations = () => {
         buttonText="Get Inspired"
       />
             </div>
+
+              
+
             <div>
               <Footer />
             </div>
