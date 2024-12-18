@@ -5,8 +5,14 @@ import { ProductCard } from '../../components/ProductCard'
 import Footer from '../../components/Footer'
 import { NavLanding } from '../../components/NavLanding'
 import LandingHero from '../../components/LandingHero'
+import { useAuthStore } from '../../store/authStore'
 
 const Home: React.FC = () => {
+  const { isAuthenticated } = useAuthStore();
+  console.log('User Authenticated?:',isAuthenticated)
+
+  const { loginUser, memberDetails } = useAuthStore();
+  console.log(memberDetails)
   return (
     <div>
         <NavLanding />

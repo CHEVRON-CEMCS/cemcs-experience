@@ -3,7 +3,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 
-export function TourCard() {
+interface TourCardProps {
+  name: string;
+}
+
+export function TourCard({ name }: TourCardProps) {
   return (
     <div className="rounded-lg">
       <div className="relative h-[250px]">
