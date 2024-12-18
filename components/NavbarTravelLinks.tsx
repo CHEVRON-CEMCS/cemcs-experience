@@ -12,7 +12,7 @@ export const navbarTravelLinks = [
   },
   {
     id: 1,
-    name: "Bookings",
+    name: "Booking History",
     href: "/bookings",
   },
   {
@@ -25,11 +25,11 @@ export const navbarTravelLinks = [
     name: "Tour Packages",
     href: "/tourPackage",
   },
-  // {
-  //   id: 4,
-  //   name: "Kids",
-  //   href: "/products/kids",
-  // },
+  {
+    id: 4,
+    name: "Book Hotel",
+    href: "/hotelBooking",
+  },
 ];
 
 export function NavbarTravelLinks() {

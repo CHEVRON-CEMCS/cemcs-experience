@@ -4,6 +4,7 @@ export interface FlightBooking {
     booking_type: string;
     contact_email: string;
     contact_phone: string;
+    customer: string;
     flight_segments: FlightSegment[];
     passengers: Passenger[];
     currency: string;

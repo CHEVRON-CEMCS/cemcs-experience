@@ -3,30 +3,35 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 
-export function HotelCard() {
+interface HotelBooking {
+  name: string;
+  hotel_name: string;
+}
+
+export function HotelCard({ booking }: { booking: HotelBooking }) {
   return (
     <div className="rounded-lg">
       <div className="relative h-[250px]">
         <Image
           src="/hotelimage.jpg"
-          alt="Product Image"
+          alt="Hotel Image"
           fill
           className="object-cover object-center w-full h-full rounded-lg"
         />
       </div>
 
       <div className="flex justify-between items-center mt-2">
-        <h1 className="font-semibold text-xl">Product Name</h1>
-        <h3 className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-bold text-primary ring-1 ring-inset ring-primary/10">
+        <h1 className="font-bold text-xl uppercase">{booking.hotel_name}</h1>
+        {/* <h3 className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-bold text-primary ring-1 ring-inset ring-primary/10">
           NGN100
-        </h3>
+        </h3> */}
       </div>
-      <p className="text-gray-600 text-sm mt-2 line-clamp-2">
+      {/* <p className="text-gray-600 text-sm mt-2 line-clamp-2">
         This is a brief product description.
-      </p>
+      </p> */}
 
       <Button asChild className="w-full mt-5">
-        <Link href={`/hoteldetails`}>View Details</Link>
+        <Link href={`/hoteldetails/${booking.name}`}>View Details</Link>
       </Button>
     </div>
   );
