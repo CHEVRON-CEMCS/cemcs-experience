@@ -6,7 +6,7 @@ import { ProductsSection } from '../../components/ProductsSection';
 import { StatsSection } from '../../components/StatsSection';
 import { CtaSection } from '../../components/CtaSection';
 import { FooterSection } from '../../components/FooterSection';
-
+import { ImagePopupModal } from '../../components/ImagePopupModal';
 
 function App() {
   return (
@@ -20,6 +20,7 @@ function App() {
         <CtaSection />
       </main>
       <FooterSection />
+      <ImagePopupModal />
     </div>
   );
 }

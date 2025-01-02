@@ -7,10 +7,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ message: 'Method not allowed' })
   }
 
+  const { baseUrl, ...loginData } = req.body
+
   try {
     const response = await axios.post(
-      'https://retiree.chevroncemcs.com/api/method/login',
-      req.body,
+      `https://${baseUrl}/api/method/login`,
+      loginData,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -25,16 +27,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.setHeader('Set-Cookie', cookies)
     }
 
-    // Get the session id if it exists
-    const sessionCookie = cookies?.find(cookie => cookie.startsWith('sid='))
-    if (sessionCookie) {
-      // Set up session cookie specifically
-      res.setHeader('Set-Cookie', sessionCookie)
-    }
-
     return res.status(200).json(response.data)
   } catch (error) {
-    console.error('Login Error:', error)
+    if (axios.isAxiosError(error) && error.response) {
+      // Forward the exact status code and error message from Frappe
+      return res.status(error.response.status).json(error.response.data)
+    }
+    
     return res.status(500).json({ 
       message: 'Failed to login',
       error: error instanceof Error ? error.message : 'Unknown error'

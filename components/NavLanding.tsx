@@ -8,7 +8,8 @@ const navLinks = [
   { name: 'Ecommerce Store', url: '/shop' },
   { name: 'Travels', url: '/reservations' },
   { name: 'Retiree Platform', url: 'https://portal.chevroncemcs.com/#login' },
-  { name: 'Member Platform', url: 'https://member.chevroncemcs.com/login' }
+  { name: 'Member Platform', url: 'https://member.chevroncemcs.com/login' },
+  { name: 'Blog', url: '/blog' }
 ];
 
 const topLinks = [
@@ -20,6 +21,9 @@ const topLinks = [
 export const NavLanding: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { logout, isAuthenticated } = useAuthStore();
+  console.log('is Authenticated:', isAuthenticated)
+  const { memberDetails } = useAuthStore();
+  console.log('User Details:', memberDetails)
 
   const handleExternalLink = (url: string) => {
     if (url.startsWith('http')) {
@@ -49,7 +53,9 @@ export const NavLanding: React.FC = () => {
 
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
-            <span className="text-2xl font-bold text-blue-600">CEMCS</span>
+            <Link href='/'>
+              <span className="text-2xl font-bold text-blue-600">CEMCS</span>
+            </Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">

@@ -45,9 +45,9 @@ export const HeroSlider: React.FC = () => {
             <div className="max-w-2xl text-white">
               <h1 className="text-5xl font-bold mb-6">{slide.title}</h1>
               <p className="text-xl mb-8">{slide.description}</p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center">
+              {/* <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center">
                 {slide.cta} <ArrowRight className="ml-2 h-5 w-5" />
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

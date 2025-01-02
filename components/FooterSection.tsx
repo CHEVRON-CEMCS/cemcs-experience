@@ -4,7 +4,7 @@ import { Facebook, Twitter, Instagram, Youtube, MapPin, Phone, Mail } from 'luci
 const footerLinks = {
   products: ['Loans', 'Investments', 'Credit Cards', 'Real Estate'],
   services: ['Ecommerce Store', 'Travels', 'Retiree Platform', 'Member Platform'],
-  company: ['About Us', 'Careers', 'News'],
+  company: ['About Us', 'Careers', 'Blog'],
   support: ['Contact Us', 'FAQs', 'Help Center', 'Report Fraud', 'Feedback'],
 };
 
@@ -93,7 +93,7 @@ export const FooterSection: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 py-8 text-sm text-center">
-          <p>© 2024 CEMCS. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} CEMCS. All rights reserved.</p>
           <p className="mt-2">
             <a href="#" className="hover:text-blue-400">Privacy Policy</a>
             {' • '}

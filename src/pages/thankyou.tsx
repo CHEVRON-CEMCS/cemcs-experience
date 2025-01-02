@@ -119,7 +119,7 @@ const ThankYouPage = () => {
                 <div className='mt-4'>
                   <PDFDownloadLink 
                     document={<Receipt order={order} />} 
-                    fileName={`CEMCS-receipt-${order.id}.pdf`}
+                    fileName={`CEMCS-receipt.pdf`}
                   >
                     {/* {({ loading }) => ( */}
                       <Button variant="outline" >

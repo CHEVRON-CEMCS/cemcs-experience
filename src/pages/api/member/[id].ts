@@ -13,10 +13,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const { id } = req.query
+  // Get the baseUrl from the request headers
+  const baseUrl = req.headers['x-base-url']
+
+  if (!baseUrl) {
+    return res.status(400).json({ message: 'Base URL is required' })
+  }
 
   try {
     const response = await axios.get(
-      `https://retiree.chevroncemcs.com/api/resource/Member/${id}`,
+      `https://${baseUrl}/api/resource/Member/${id}`,
       {
         headers: {
           'Cookie': req.headers.cookie,
