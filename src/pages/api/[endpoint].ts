@@ -9,6 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     'Product': '["name","product_name","price","pro_image","category","featured"]',
     'Flight Booking': '["name","customer"]',
     'Tour Booking': '["name","customer"]',
+    'Tour Package': '["name","package_name"]',
+    'Experience Blog': '["name","title","featured_image","publish_date","status"]',
   }[endpoint as string] || '["name"]'
   
   try {
@@ -30,6 +32,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Add customer filter if provided
     if (customer) {
       filters.push(["customer", "=", customer])
+    }
+
+    // Add status filter for Experience Blog
+    if (endpoint === 'Experience Blog') {
+      filters.push(["status", "=", "Published"])
     }
     
     // Add filters to URL if any exist

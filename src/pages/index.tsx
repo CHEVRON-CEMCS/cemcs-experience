@@ -1,36 +1,28 @@
-import React from 'react'
-import { ImageSlider } from '../../components/Banner'
-import { Navbar } from '../../components/Navbar'
-import { ProductCard } from '../../components/ProductCard'
-import Footer from '../../components/Footer'
-import { NavLanding } from '../../components/NavLanding'
-import LandingHero from '../../components/LandingHero'
-import { useAuthStore } from '../../store/authStore'
+import React from 'react';
+import { NavLanding } from '../../components/NavLanding';
+import { HeroSlider } from '../../components/HeroSlider';
+import { FeaturesGrid } from '../../components/FeaturesGrid';
+import { ProductsSection } from '../../components/ProductsSection';
+import { StatsSection } from '../../components/StatsSection';
+import { CtaSection } from '../../components/CtaSection';
+import { FooterSection } from '../../components/FooterSection';
+import { ImagePopupModal } from '../../components/ImagePopupModal';
 
-const Home: React.FC = () => {
-  const { isAuthenticated } = useAuthStore();
-  console.log('User Authenticated?:',isAuthenticated)
-
-  const { loginUser, memberDetails } = useAuthStore();
-  console.log(memberDetails)
+function App() {
   return (
-    <div>
-        <NavLanding />
-        <LandingHero />
-        {/* <div className='max-w-7xl mx-auto'>
-          <ImageSlider />
-          <div>
-            <h1 className='text-3xl font-bold mt-14'>Featured Products</h1>
-          </div>
-          <div className='w-full grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-10 lg:gap-x-8 mt-8 mb-10'>
-            <ProductCard />
-          </div>
-        </div>
-        <div>
-          <Footer />
-        </div> */}
+    <div className="min-h-screen">
+      <NavLanding />
+      <main>
+        <HeroSlider />
+        <FeaturesGrid />
+        <ProductsSection />
+        <StatsSection />
+        <CtaSection />
+      </main>
+      <FooterSection />
+      <ImagePopupModal />
     </div>
-  )
+  );
 }
 
-export default Home
+export default App;

@@ -7,14 +7,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ message: 'Method not allowed' })
   }
 
-  // Check if we have cookies
   if (!req.headers.cookie) {
     return res.status(401).json({ message: 'No session found' })
   }
 
+  const baseUrl = req.headers['x-base-url']
+
+  if (!baseUrl) {
+    return res.status(400).json({ message: 'Base URL is required' })
+  }
+
   try {
     const response = await axios.get(
-      'https://retiree.chevroncemcs.com/api/resource/Member',
+      `https://${baseUrl}/api/resource/Member`,
       {
         headers: {
           'Cookie': req.headers.cookie,

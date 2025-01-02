@@ -10,7 +10,12 @@ interface Slide {
   image: string;
 }
 
-export function ReservationSlider() {
+interface CarouselData {
+  name: string;
+  slides: Slide[];
+}
+
+export function ShoppingImageSlider() {
   const [slides, setSlides] = useState<Slide[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,13 +27,13 @@ export function ReservationSlider() {
     const fetchCarouselData = async () => {
       try {
         const carouselResponse = await axios.get('/api/Carousel');
-        // Find the carousel with name "Travels"
-        const travelsCarousel = carouselResponse.data.data.find(
-          (carousel: { name: string }) => carousel.name === "CR-02284"
+        // Find the carousel with name "Shopping"
+        const shoppingCarousel = carouselResponse.data.data.find(
+          (carousel: { name: string }) => carousel.name === "CR-02283"
         );
         
-        if (travelsCarousel) {
-          const detailsResponse = await axios.get(`/api/Carousel/${travelsCarousel.name}`);
+        if (shoppingCarousel) {
+          const detailsResponse = await axios.get(`/api/Carousel/${shoppingCarousel.name}`);
           setSlides(detailsResponse.data.data.slides);
         }
       } catch (err) {
@@ -94,7 +99,7 @@ export function ReservationSlider() {
   return (
     <div className="w-full grid gap-6 md:gap-3 items-start">
       <div className="relative w-full overflow-hidden rounded-lg aspect-[3/1]">
-        <div 
+                  <div 
           className="flex transition-transform duration-500 ease-in-out" 
           style={{ transform: `translateX(-${mainImageIndex * 100}%)` }}
         >
@@ -134,7 +139,7 @@ export function ReservationSlider() {
       </div>
 
       {slides.length > 1 && (
-        <div className="relative hidden">
+        <div className="relative">
           <div 
             ref={thumbnailsRef}
             className="flex gap-4 overflow-x-auto scrollbar-hide"
@@ -166,3 +171,5 @@ export function ReservationSlider() {
     </div>
   );
 }
+
+export default ShoppingImageSlider;

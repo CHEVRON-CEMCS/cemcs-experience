@@ -1,5 +1,5 @@
 import { StarIcon } from "lucide-react";
-import { ImageSlider } from "../../components/Banner";
+import { ImageSlider } from "../../components/ShoppingImageSlider";
 import { ShoppingBagButton } from "../../components/SubmitButton";
 import Image from "next/image";
 import { Navbar } from "../../components/Navbar";

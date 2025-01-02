@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { ImageSlider } from '../../components/Banner'
 import { Navbar } from '../../components/Navbar'
 import { LoadingProductCard, ProductCard } from '../../components/ProductCard'
 import Footer from '../../components/Footer'
 import axios, { AxiosError } from 'axios'
 import { Toaster, toast } from 'sonner'
 import { CategoryNav } from '../../components/CategoryNav'
+import ShoppingImageSlider from '../../components/ShoppingImageSlider'
 
 interface Product {
   name: string;
@@ -43,8 +43,8 @@ const Shop: React.FC = () => {
     <div>
      <Navbar />
      <CategoryNav />
-     <div className='max-w-7xl mx-auto'>
-       <ImageSlider />
+     <div className='max-w-7xl mx-auto mt-5'>
+       <ShoppingImageSlider />
        <div>
          <h1 className='text-3xl font-bold mt-14'>Featured Products</h1>
        </div>

@@ -5,9 +5,11 @@ import { TourCard } from '../../components/TourCard';
 import axios, { AxiosError } from 'axios'
 import Image from 'next/image';
 import Link from 'next/link';
+import Footer from '../../components/Footer';
 
 interface TourPackage {
   name: string;
+  package_name: string;
 }
 
 const tourPackage = () => {
@@ -62,18 +64,22 @@ const tourPackage = () => {
           </div>
         ) : (
           <div className="w-full grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-10 lg:gap-x-8 mt-8 mb-10">
-          {bookings.map((booking, index) => (
-            <Link 
-            href={`/tourdetails/${booking.name}`} 
-            key={booking.name}
-          >
-            <TourCard key={index} name={booking.name} />
-            </Link>
-          ))}
-        </div>
+            {bookings.map((booking, index) => (
+              <Link 
+                href={`/tourdetails/${booking.name}`} 
+                key={booking.name}
+              >
+                <TourCard 
+                  key={index} 
+                  name={booking.name} 
+                  package_name={booking.package_name}
+                />
+              </Link>
+            ))}
+          </div>
         )}
       </div>
-      
+      <Footer />
     </div>
   );
 };
