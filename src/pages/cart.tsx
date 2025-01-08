@@ -21,7 +21,7 @@ import {
    import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useAuthStore } from "../../store/authStore";
-import { LoginModal } from "../../components/LoginModal";
+// import { LoginModal } from "../../components/LoginModal";
 
    interface PaymentMethod {
     title: string;
@@ -43,6 +43,7 @@ import { LoginModal } from "../../components/LoginModal";
    
    const Cart = () => {
     const { items, removeItem, increaseQuantity, decreaseQuantity, clearCart } = useCartStore();
+    const [isCheckingOut, setIsCheckingOut] = useState(false);
     const { memberDetails } = useAuthStore();
     const [selectedPayment, setSelectedPayment] = useState<string>('');
     const [showModal, setShowModal] = useState(false);
@@ -100,8 +101,8 @@ import { LoginModal } from "../../components/LoginModal";
           </div>
         )
       },
-      'Cash On Delivery': {
-        title: 'Cash On Delivery',
+      'Cash on Delivery': {
+        title: 'Cash on Delivery',
         description: 'Pay when you receive your items',
         content: (
           <div className="space-y-4">
@@ -126,10 +127,12 @@ import { LoginModal } from "../../components/LoginModal";
     const handleCheckout = async () => {
       // Check if user is authenticated
       if (!memberDetails?.membership_number) {
-        setShowLoginModal(true);
+        router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
         return;
       }
-  
+    
+      setIsCheckingOut(true); // Start loading
+    
       try {
         const orderData = {
           doctype: "Product Order",
@@ -151,38 +154,42 @@ import { LoginModal } from "../../components/LoginModal";
           tax_amount: 0,
           total_amount: total
         };
-  
+    
         console.log('Order Data:', orderData);
         const response = await axios.post('/api/product-order', orderData);
         console.log('Checkout Response:', response.data);
-  
+    
+        // Only clear cart after successful navigation
+        const orderDetails = {
+          id: response.data.name,
+          payment_method: selectedPayment,
+          items: items,
+          subtotal: subtotal,
+          shipping_fee: transactionFee,
+          total_amount: total,
+          payment_status: 'Pending'
+        };
+    
+        await router.push({
+          pathname: '/thankyou',
+          query: { orderData: JSON.stringify(orderDetails) }
+        });
+    
+        // Clear cart after successful navigation
         clearCart();
         toast.success('Order placed successfully!');
-        router.push({
-          pathname: '/thankyou',
-          query: { 
-            orderData: JSON.stringify({
-              id: response.data.name,
-              payment_method: selectedPayment,
-              items: items,
-              subtotal: subtotal,
-              shipping_fee: transactionFee,
-              total_amount: total,
-              payment_status: 'Pending'
-            })
-          }
-        });
-  
+    
       } catch (error) {
         console.error('Checkout error:', error);
         toast.error('Failed to complete checkout');
+        setIsCheckingOut(false); // Reset loading state on error
       }
     };
 
-    const handleLoginSuccess = () => {
-      setShowLoginModal(false);
-      handleCheckout();
-    };
+    // const handleLoginSuccess = () => {
+    //   setShowLoginModal(false);
+    //   handleCheckout();
+    // };
    
     if (items.length === 0) {
       return (
@@ -365,8 +372,8 @@ import { LoginModal } from "../../components/LoginModal";
                         </div>
    
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="Cash On Delivery" id="cod" />
-                          <Label htmlFor="cod">Cash On Delivery</Label>
+                          <RadioGroupItem value="Cash on Delivery" id="cod" />
+                          <Label htmlFor="cod">Cash on Delivery</Label>
                         </div>
    
                         <div className="flex items-center space-x-2">
@@ -397,23 +404,49 @@ import { LoginModal } from "../../components/LoginModal";
                   )}
    
                     <Button 
-                    className="w-full bg-blue-500 mt-4" 
-                    size="lg"
-                    disabled={!selectedPayment}
-                    onClick={handleCheckout}
+                      className="w-full bg-blue-500 mt-4" 
+                      size="lg"
+                      disabled={!selectedPayment || isCheckingOut}
+                      onClick={handleCheckout}
                     >
-                    Complete Checkout
+                      {isCheckingOut ? (
+                        <div className="flex items-center justify-center">
+                          <svg 
+                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            fill="none" 
+                            viewBox="0 0 24 24"
+                          >
+                            <circle 
+                              className="opacity-25" 
+                              cx="12" 
+                              cy="12" 
+                              r="10" 
+                              stroke="currentColor" 
+                              strokeWidth="4"
+                            />
+                            <path 
+                              className="opacity-75" 
+                              fill="currentColor" 
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            />
+                          </svg>
+                          Processing...
+                        </div>
+                      ) : (
+                        'Complete Checkout'
+                      )}
                     </Button>
                 </div>
               </section>
             </div>
           </div>
         </div>
-        <LoginModal 
+        {/* <LoginModal 
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
         onSuccess={handleLoginSuccess}
-      />
+      /> */}
         <Footer />
       </div>
     );

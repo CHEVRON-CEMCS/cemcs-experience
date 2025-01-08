@@ -10,7 +10,7 @@ import { NavTravel } from "../../../components/NavTravel";
 import { useRouter } from "next/router";
 import axios, { AxiosError } from "axios";
 import { useAuthStore } from "../../../store/authStore";
-import { LoginModal } from "../../../components/LoginModal";
+// import { LoginModal } from "../../../components/LoginModal";
 
 interface BookingDetails {
     name: string;
@@ -91,10 +91,11 @@ interface BookingDetails {
   
     const submitBooking = async () => {
       if (!memberDetails?.membership_number) {
-        setShowLoginModal(true);
+        // Redirect to signin page with return URL
+        router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
         return;
       }
-  
+    
       const payload = {
         tour_package: id,
         start_date: formData.start_date,
@@ -107,7 +108,7 @@ interface BookingDetails {
         customer: memberDetails.membership_number,
         travelers,
       };
-  
+    
       try {
         const response = await axios.post('/api/tour-booking', payload);
         console.log("Booking created:", response);
@@ -124,10 +125,10 @@ interface BookingDetails {
       submitBooking();
     };
   
-    const handleLoginSuccess = () => {
-      setShowLoginModal(false);
-      submitBooking();
-    };
+    // const handleLoginSuccess = () => {
+    //   setShowLoginModal(false);
+    //   submitBooking();
+    // };
   
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -420,11 +421,11 @@ interface BookingDetails {
             </div>
           </div>
         </div>
-        <LoginModal 
+        {/* <LoginModal 
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
         onSuccess={handleLoginSuccess}
-      />
+      /> */}
       </div>
     </div>
   );
