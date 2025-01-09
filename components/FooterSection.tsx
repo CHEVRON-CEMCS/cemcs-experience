@@ -102,14 +102,14 @@ export const FooterSection: React.FC = () => {
         <div className="border-t border-gray-800 py-8 text-sm text-center">
           <p>© {new Date().getFullYear()} CEMCS. All rights reserved.</p>
           <p className="mt-2">
-            <a href="#" className="hover:text-blue-400">
+            <a href="/privacy" className="hover:text-blue-400">
               Privacy Policy
             </a>
             {" • "}
-            <a href="#" className="hover:text-blue-400">
+            {/* <a href="#" className="hover:text-blue-400">
               Terms of Service
             </a>
-            {" • "}
+            {" • "} */}
             <a href="#" className="hover:text-blue-400">
               Sitemap
             </a>
