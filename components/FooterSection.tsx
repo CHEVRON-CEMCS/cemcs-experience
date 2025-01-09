@@ -1,5 +1,13 @@
-import React from 'react';
-import { Facebook, Twitter, Instagram, Youtube, MapPin, Phone, Mail } from 'lucide-react';
+import React from "react";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
+  MapPin,
+  Phone,
+  Mail,
+} from "lucide-react";
 
 const footerLinks = {
   products: ['Loans', 'Investments', 'Credit Cards', 'Real Estate'],
@@ -51,7 +59,7 @@ export const FooterSection: React.FC = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
+          {/* <div>
             <h4 className="text-lg font-semibold text-white mb-4">Products</h4>
             <ul className="space-y-2">
               {footerLinks.products.map((link) => (
