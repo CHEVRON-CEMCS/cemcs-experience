@@ -14,7 +14,13 @@ export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
   const addItem = useCartStore((state) => state.addItem)
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://staging.chevroncemcs.com';
-  const imageUrl = product.pro_image ? `${baseUrl}${product.pro_image}` : '/shop-cap.jpg';
+  
+  // Check if the pro_image is a complete URL or a relative path
+  const imageUrl = product.pro_image?.startsWith('http') 
+    ? product.pro_image 
+    : product.pro_image 
+      ? `${baseUrl}${product.pro_image}` 
+      : '/shop-cap.jpg';
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation()

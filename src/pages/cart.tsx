@@ -233,12 +233,16 @@ import { useAuthStore } from "../../store/authStore";
                     <li key={item.id} className="flex py-6 sm:py-10">
                       <div className="flex-shrink-0">
                         <div className="relative h-24 w-24">
-                        <Image
+                          <Image
                             fill
-                            src={item.pro_image ? `${baseUrl}${item.pro_image}` : '/shop-cap.jpg'}
+                            src={item.pro_image?.startsWith('http') 
+                              ? item.pro_image 
+                              : item.pro_image 
+                                ? `${baseUrl}${item.pro_image}` 
+                                : '/shop-cap.jpg'}
                             alt={item.product_name}
                             className="h-full w-full rounded-md object-cover object-center"
-                        />
+                          />
                         </div>
                       </div>
    

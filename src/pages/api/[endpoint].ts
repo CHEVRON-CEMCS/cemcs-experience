@@ -3,21 +3,32 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { endpoint, category, sub_category, featured, customer } = req.query
+  const { endpoint, category, sub_category, featured, search } = req.query
   
   const fields = {
     'Hotel': '["name","hotel_name"]',
-    'Product': '["name","product_name","price","pro_image","category","sub_category","featured"]',
+    'Product': '["name","product_name","price","pro_image","category","sub_category","featured","status"]',
     'Flight Booking': '["name","customer"]',
     'Tour Booking': '["name","customer"]',
     'Tour Package': '["name","package_name"]',
     'Experience Blog': '["name","title","featured_image","publish_date","status"]',
+    'Carousel': '["name","carousel_name","slides"]'
   }[endpoint as string] || '["name"]'
   
   try {
     let url = `https://staging.chevroncemcs.com/api/resource/${endpoint}?fields=${fields}&limit_page_length=10000`
     
     let filters = []
+    
+    // Only add status filter for Products
+    if (endpoint === 'Product') {
+      filters.push(["status", "=", "Active"])
+    }
+
+    // Add search filter if search query exists
+    if (search && typeof search === 'string') {
+      filters.push(["product_name", "like", `%${search}%`])
+    }
     
     if (category) {
       filters.push(["category", "=", category])
@@ -27,7 +38,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       filters.push(["sub_category", "=", sub_category])
     }
     
-    // Add featured filter when featured=true in query
     if (featured === 'true') {
       filters.push(["featured", "=", "Yes"])
     }
@@ -46,7 +56,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
 
-    // Handle both array and single object responses
     let responseData;
     if (Array.isArray(response.data.data)) {
       responseData = response.data.data;

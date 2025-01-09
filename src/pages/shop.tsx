@@ -13,6 +13,7 @@ interface Product {
   price: number;
   pro_image: string;
   featured: string;
+  status: string;
 }
 
 const Shop: React.FC = () => {
