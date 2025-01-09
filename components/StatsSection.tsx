@@ -1,26 +1,26 @@
-import React from 'react';
-import { Users, Building2, Award, Landmark } from 'lucide-react';
+import React from "react";
+import { Users, Building2, Award, Landmark } from "lucide-react";
 
 const stats = [
   {
     icon: <Users className="h-8 w-8" />,
-    value: '50,000+',
-    label: 'Members',
+    value: "200,000+",
+    label: "Members",
   },
   {
     icon: <Building2 className="h-8 w-8" />,
-    value: '1',
-    label: 'Branches',
+    value: "2",
+    label: "Branches",
   },
   {
     icon: <Award className="h-8 w-8" />,
-    value: '95%',
-    label: 'Satisfaction Rate',
+    value: "95%",
+    label: "Satisfaction Rate",
   },
   {
     icon: <Landmark className="h-8 w-8" />,
-    value: '₦2B+',
-    label: 'Assets Managed',
+    value: "₦5B+",
+    label: "Assets Managed",
   },
 ];
 
