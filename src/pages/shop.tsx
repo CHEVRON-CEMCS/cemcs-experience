@@ -17,27 +17,35 @@ interface Product {
 
 const Shop: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([])
- const [loading, setLoading] = useState(true)
- const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
- useEffect(() => {
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get('/api/Product?featured=true')
-      console.log('product', response.data)
-      setProducts(response.data.data)
-    } catch (err) {
-      const errorMessage = err instanceof AxiosError 
-        ? err.response?.data?.message || err.message
-        : 'An unexpected error occurred'
-      setError(errorMessage)
-    } finally {
-      setLoading(false)
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('/api/Product?featured=true')
+        console.log('product', response.data)
+        
+        // Make sure we're working with an array
+        const productsData = Array.isArray(response.data.data) 
+          ? response.data.data 
+          : [response.data.data];
+        
+        // Add proper type to the filter function
+        const featuredProducts = productsData.filter((product: Product) => product.featured === "Yes");
+        setProducts(featuredProducts)
+      } catch (err) {
+        const errorMessage = err instanceof AxiosError 
+          ? err.response?.data?.message || err.message
+          : 'An unexpected error occurred'
+        setError(errorMessage)
+      } finally {
+        setLoading(false)
+      }
     }
-  }
 
-  fetchProducts()
-}, [])
+    fetchProducts()
+  }, [])
 
   return (
     <div>

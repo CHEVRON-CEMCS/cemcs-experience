@@ -16,7 +16,7 @@ import { FlightBooking } from '../../types/flight';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/router';
 import { useAuthStore } from '../../store/authStore';
-import { LoginModal } from '../../components/LoginModal';
+// import { LoginModal } from '../../components/LoginModal';
 
 const Travel = () => {
   const { toast } = useToast();
@@ -60,7 +60,8 @@ const Travel = () => {
 
   const submitBooking = async () => {
     if (!memberDetails?.membership_number) {
-      setShowLoginModal(true);
+      // Redirect to signin page with return URL
+      router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
       return;
     }
 
@@ -152,10 +153,10 @@ const Travel = () => {
     submitBooking();
   };
 
-  const handleLoginSuccess = () => {
-    setShowLoginModal(false);
-    submitBooking();
-  };
+  // const handleLoginSuccess = () => {
+  //   setShowLoginModal(false);
+  //   submitBooking();
+  // };
 
   return (
     <div>
@@ -317,11 +318,11 @@ const Travel = () => {
               </Button>
             </div>
           </form>
-          <LoginModal 
+          {/* <LoginModal 
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
         onSuccess={handleLoginSuccess}
-      />
+      /> */}
         </div>
       </div>
     </div>
