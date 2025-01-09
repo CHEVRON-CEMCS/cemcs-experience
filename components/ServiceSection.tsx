@@ -4,7 +4,7 @@ import { ShoppingCart, Map, Bed, Shield } from "lucide-react";
 const products = [
   {
     icon: <ShoppingCart className="h-8 w-8 text-blue-600" />,
-    title: "E-Commerce",
+    title: "E-Commerce Store",
     description:
       "Streamline your shopping journey with features that make browsing, purchasing, and checkout quick and intuitive with exclusive offers.",
     link: "/shop",
