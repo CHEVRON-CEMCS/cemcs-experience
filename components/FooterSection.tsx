@@ -4,12 +4,15 @@ import { MapPin, Phone, Mail } from "lucide-react";
 const footerLinks = {
   products: ["Loans", "Investments", "Credit Cards", "Real Estate"],
   services: [
-    "E-commerce Store",
-    "Travels",
-    "Retiree Platform",
-    "Member Platform",
+    { name: "E-commerce Store", url: "/shop" },
+    { name: "Travels", url: "/reservations" },
+    { name: "Retiree Platform", url: "https://portal.chevroncemcs.com/#login" },
+    { name: "Member Platform", url: "https://member.chevroncemcs.com/login" },
   ],
-  company: ["About Us", "Blog"],
+  company: [
+    { name: "About Us", url: "/about" },
+    { name: "Blog", url: "/blog" },
+  ],
   support: ["Contact Us", "FAQs", "Help Center", "Report Fraud", "Feedback"],
 };
 
@@ -66,9 +69,12 @@ export const FooterSection: React.FC = () => {
             <h4 className="text-lg font-semibold text-white mb-4">Services</h4>
             <ul className="space-y-2">
               {footerLinks.services.map((link) => (
-                <li key={link}>
-                  <a href="#" className="hover:text-blue-400 transition-colors">
-                    {link}
+                <li>
+                  <a
+                    href={link.url}
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    {link.name}
                   </a>
                 </li>
               ))}
@@ -79,9 +85,12 @@ export const FooterSection: React.FC = () => {
             <h4 className="text-lg font-semibold text-white mb-4">Company</h4>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
-                <li key={link}>
-                  <a href="#" className="hover:text-blue-400 transition-colors">
-                    {link}
+                <li>
+                  <a
+                    href={link.url}
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    {link.name}
                   </a>
                 </li>
               ))}
