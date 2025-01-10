@@ -1,14 +1,60 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navbar } from '../../components/Navbar'
 import { ReservationSlider } from '../../components/ReservationSlider'
-import { HotelCard } from '../../components/HotelCard'
+import { HotelCard, LoadingHotelCard } from '../../components/HotelCard'
 import { NavTravel } from '../../components/NavTravel'
 import SmallCard from '../../components/SmallCard'
 import LargeCard from '../../components/LargeCard'
 import Footer from '../../components/Footer'
 import { AppleCardsCarouselDemo } from '../../components/AppleCardsCarousel'
+import axios, { AxiosError } from 'axios'
+import { useAuthStore } from '../../store/authStore'
+
+
+interface HotelBooking {
+  name: string;
+  hotel_name: string;
+}
 
 const Reservations = () => {
+  const [bookings, setBookings] = useState<HotelBooking[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const { isAuthenticated } = useAuthStore();
+  console.log('User Authenticated?:',isAuthenticated)
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await axios.get('/api/Hotel', {
+          params: {
+            fields: '["name", "hotel_name"]'
+          }
+        });        console.log('API Response:', response.data)
+        setBookings(response.data.data)
+      } catch (err) {
+        console.error('API Error:', err)
+        const errorMessage = err instanceof AxiosError 
+          ? err.response?.data?.message || err.message
+          : 'An unexpected error occurred'
+        setError(errorMessage)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchBookings()
+  }, [])
+
+
+
+
+
+
+
+
+
+
+
   // Local array of card data
   const data = [
     {"img":"/visa1.jpg","location":"Singapore","distance":"Visa"},
@@ -46,11 +92,21 @@ const Reservations = () => {
               <h1 className='text-2xl font-semibold pb-1 mt-10'>Explore Hotel Bookings</h1>
             </div>
             <div className='w-full grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-10 lg:gap-x-8 mt-8 mb-10'>
-                <HotelCard />
-                <HotelCard />
-                <HotelCard />
-                <HotelCard />
-            </div>
+    {loading ? (
+      <>
+        <LoadingHotelCard />
+        <LoadingHotelCard />
+        <LoadingHotelCard />
+        <LoadingHotelCard />
+      </>
+    ) : error ? (
+      <p>Error loading bookings: {error}</p>
+    ) : (
+      bookings.map((booking) => (
+        <HotelCard key={booking.name} booking={booking} />
+      ))
+    )}
+</div>
             <div>
                 <AppleCardsCarouselDemo />
               </div>

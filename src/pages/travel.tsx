@@ -15,11 +15,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { FlightBooking } from '../../types/flight';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/router';
+import { useAuthStore } from '../../store/authStore';
+// import { LoginModal } from '../../components/LoginModal';
 
 const Travel = () => {
   const { toast } = useToast();
   const router = useRouter();
+  const { memberDetails } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -54,8 +58,13 @@ const Travel = () => {
     }));
   };
 
-const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitBooking = async () => {
+    if (!memberDetails?.membership_number) {
+      // Redirect to signin page with return URL
+      router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
+      return;
+    }
+
     setIsLoading(true);
   
     try {
@@ -65,6 +74,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         booking_type: formData.tripType,
         contact_email: formData.email,
         contact_phone: formData.phone,
+        customer: memberDetails.membership_number,
         flight_segments: [
           {
             flight_number: formData.flightNumber, 
@@ -96,7 +106,6 @@ const handleSubmit = async (e: React.FormEvent) => {
         special_requests: formData.additionalInfo
       };
   
-      // If it's a round trip, add return flight segment with flight number
       if (formData.tripType === 'Round Trip' && formData.returnDate) {
         bookingData.flight_segments.push({
           flight_number: formData.returnFlightNumber, 
@@ -113,8 +122,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       }
   
       const response = await axios.post('/api/flight-booking', bookingData);
-
-      console.log('res:', response)
+      console.log('res:', response);
   
       toast({
         title: "Success",
@@ -139,6 +147,16 @@ const handleSubmit = async (e: React.FormEvent) => {
       setIsLoading(false);
     }
   };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submitBooking();
+  };
+
+  // const handleLoginSuccess = () => {
+  //   setShowLoginModal(false);
+  //   submitBooking();
+  // };
 
   return (
     <div>
@@ -300,6 +318,11 @@ const handleSubmit = async (e: React.FormEvent) => {
               </Button>
             </div>
           </form>
+          {/* <LoginModal 
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSuccess={handleLoginSuccess}
+      /> */}
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['images.unsplash.com', 'links.papareact.com'], // Add the domain here
+    domains: ['images.unsplash.com', 'links.papareact.com', 'staging.chevroncemcs.com', 'shop.chevroncemcs.com', 'i.ibb.co'], // Add the domain here
   },
 };
 
