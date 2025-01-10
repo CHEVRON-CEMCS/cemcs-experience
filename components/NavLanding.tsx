@@ -1,33 +1,35 @@
-import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { useAuthStore } from '../store/authStore';
+import React, { useState } from "react";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useAuthStore } from "../store/authStore";
+import Image from "next/image";
+import Logo from "../public/logo.png";
 
 const navLinks = [
-  { name: 'Ecommerce Store', url: '/shop' },
-  { name: 'Travels', url: '/reservations' },
-  { name: 'Retiree Platform', url: 'https://portal.chevroncemcs.com/#login' },
-  { name: 'Member Platform', url: 'https://member.chevroncemcs.com/login' },
-  { name: 'Blog', url: '/blog' }
+  { name: "Ecommerce Store", url: "/shop" },
+  { name: "Travels", url: "/reservations" },
+  { name: "Retiree Platform", url: "https://portal.chevroncemcs.com/#login" },
+  { name: "Member Platform", url: "https://member.chevroncemcs.com/login" },
+  { name: "Blog", url: "/blog" },
 ];
 
 const topLinks = [
-  { name: 'Locations', url: '#' },
-  { name: 'Contact Us', url: '#' },
-  { name: 'Help Center', url: '#' }
+  { name: "Locations", url: "#" },
+  { name: "Contact Us", url: "#" },
+  { name: "Help Center", url: "#" },
 ];
 
 export const NavLanding: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { logout, isAuthenticated } = useAuthStore();
-  console.log('is Authenticated:', isAuthenticated)
+  console.log("is Authenticated:", isAuthenticated);
   const { memberDetails } = useAuthStore();
-  console.log('User Details:', memberDetails)
+  console.log("User Details:", memberDetails);
 
   const handleExternalLink = (url: string) => {
-    if (url.startsWith('http')) {
-      window.open(url, '_blank');
+    if (url.startsWith("http")) {
+      window.open(url, "_blank");
     } else {
       window.location.href = url;
     }
@@ -35,13 +37,13 @@ export const NavLanding: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   return (
     <nav className="bg-white border-b">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="h-10 flex items-center justify-end border-b text-sm">
+        {/* <div className="h-10 flex items-center justify-end border-b text-sm">
           <div className="flex gap-4">
             {topLinks.map((link) => (
               <a key={link.name} href={link.url} className="text-gray-600 hover:text-blue-600">
@@ -49,12 +51,12 @@ export const NavLanding: React.FC = () => {
               </a>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
-            <Link href='/'>
-              <span className="text-2xl font-bold text-blue-600">CEMCS</span>
+            <Link href="/">
+              <Image src={Logo} alt="" className="w-14" />
             </Link>
           </div>
 
@@ -73,7 +75,7 @@ export const NavLanding: React.FC = () => {
 
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
-              <Button 
+              <Button
                 onClick={handleLogout}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
               >
@@ -93,7 +95,11 @@ export const NavLanding: React.FC = () => {
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-600 hover:text-blue-600"
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
@@ -111,7 +117,7 @@ export const NavLanding: React.FC = () => {
                 </button>
               ))}
               {isAuthenticated ? (
-                <button 
+                <button
                   onClick={handleLogout}
                   className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 w-full"
                 >

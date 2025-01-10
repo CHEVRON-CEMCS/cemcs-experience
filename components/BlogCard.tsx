@@ -1,8 +1,9 @@
-import React from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
-import { format } from 'date-fns';
-import { BlogPost } from '../types/blog';
+import React from "react";
+import Image from "next/image";
+import { useRouter } from "next/router";
+// import { format } from "date-fns";
+import { format } from "date-fns";
+import { BlogPost } from "../types/blog";
 
 interface BlogCardProps {
   post: BlogPost;
@@ -10,13 +11,16 @@ interface BlogCardProps {
 
 export function BlogCard({ post }: BlogCardProps) {
   const router = useRouter();
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://staging.chevroncemcs.com';
-  const imageUrl = post.featured_image ? `${baseUrl}${post.featured_image}` : '/placeholder-blog.jpg';
-  
-  const formattedDate = format(new Date(post.publish_date), 'MMM dd, yyyy');
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
+  const imageUrl = post.featured_image
+    ? `${baseUrl}${post.featured_image}`
+    : "/placeholder-blog.jpg";
+
+  const formattedDate = format(new Date(post.publish_date), "MMM dd, yyyy");
 
   return (
-    <div 
+    <div
       onClick={() => router.push(`/blog/${post.name}`)}
       className="group cursor-pointer overflow-hidden rounded-lg border bg-white shadow-sm transition-all hover:shadow-md"
     >
