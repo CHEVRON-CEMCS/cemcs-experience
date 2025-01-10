@@ -56,7 +56,7 @@ export const NavLanding: React.FC = () => {
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
             <Link href="/">
-              <Image src={Logo} alt="" className="w-12" />
+              <Image src={Logo} alt="" className="w-10" />
             </Link>
           </div>
 
