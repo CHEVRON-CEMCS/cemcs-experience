@@ -1,45 +1,44 @@
 import React from "react";
-import { Wallet, Home, Car, Briefcase } from "lucide-react";
+import { ShoppingCart, Map, Bed, Shield } from "lucide-react";
 
 const products = [
   {
-    icon: <Wallet className="h-8 w-8 text-blue-600" />,
-    title: "Loans",
-    description: "Manage your daily finances with our flexible accounts.",
-    // link: '#',
+    icon: <ShoppingCart className="h-8 w-8 text-blue-600" />,
+    title: "E-Commerce Store",
+    description:
+      "Streamline your shopping journey with features that make browsing, purchasing, and checkout quick and intuitive with exclusive offers.",
+    link: "/shop",
   },
   {
-    icon: <Home className="h-8 w-8 text-blue-600" />,
-    title: "Real Estate",
+    icon: <Map className="h-8 w-8 text-blue-600" />,
+    title: "Travels",
     description: "Find the perfect home loan for your needs.",
-    // link: '#',
+    link: "/reservations",
   },
   {
-    icon: <Car className="h-8 w-8 text-blue-600" />,
-    title: "Auto Loans",
+    icon: <Bed className="h-8 w-8 text-blue-600" />,
+    title: "Hotel Bookings",
     description: "Competitive rates for your next vehicle purchase.",
-    // link: '#',
+    link: "/hotelBooking",
   },
   {
-    icon: <Briefcase className="h-8 w-8 text-blue-600" />,
-    title: "Fixed Deposit",
+    icon: <Shield className="h-8 w-8 text-blue-600" />,
+    title: "Insurance",
     description: "Solutions to help your business grow.",
-    // link: '#',
+    // link: "#",
   },
 ];
 
-export const ProductsSection: React.FC = () => {
+export const ServiceSection: React.FC = () => {
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">
-          Our Financial Products
-        </h2>
+        <h2 className="text-3xl font-bold text-center mb-12">Our Services</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product) => (
             <a
               key={product.title}
-              // href={product.link}
+              href={product.link}
               className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="mb-4">{product.icon}</div>

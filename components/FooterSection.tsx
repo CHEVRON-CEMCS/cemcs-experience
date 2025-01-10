@@ -1,19 +1,28 @@
-import React from 'react';
-import { Facebook, Twitter, Instagram, Youtube, MapPin, Phone, Mail } from 'lucide-react';
+import React from "react";
+import { MapPin, Phone, Mail } from "lucide-react";
 
 const footerLinks = {
-  products: ['Loans', 'Investments', 'Credit Cards', 'Real Estate'],
-  services: ['Ecommerce Store', 'Travels', 'Retiree Platform', 'Member Platform'],
-  company: ['About Us', 'Careers', 'Blog'],
-  support: ['Contact Us', 'FAQs', 'Help Center', 'Report Fraud', 'Feedback'],
+  products: ["Loans", "Investments", "Credit Cards", "Real Estate"],
+  services: [
+    { id: 1, name: "E-commerce Store", url: "/shop" },
+    { id: 2, name: "Travels", url: "/reservations" },
+    {
+      id: 3,
+      name: "Retiree Platform",
+      url: "https://portal.chevroncemcs.com/#login",
+    },
+    {
+      id: 4,
+      name: "Member Platform",
+      url: "https://member.chevroncemcs.com/login",
+    },
+  ],
+  company: [
+    { id: 1, name: "About Us", url: "/about" },
+    { id: 2, name: "Blog", url: "/blog" },
+  ],
+  support: ["Contact Us", "FAQs", "Help Center", "Report Fraud", "Feedback"],
 };
-
-const socialLinks = [
-  { icon: <Facebook className="h-5 w-5" />, href: '#' },
-  { icon: <Twitter className="h-5 w-5" />, href: '#' },
-  { icon: <Instagram className="h-5 w-5" />, href: '#' },
-  { icon: <Youtube className="h-5 w-5" />, href: '#' },
-];
 
 export const FooterSection: React.FC = () => {
   return (
@@ -37,7 +46,7 @@ export const FooterSection: React.FC = () => {
                 <span>contact@cemcs.com</span>
               </div>
             </div>
-            <div className="flex gap-4 mt-6">
+            {/* <div className="flex gap-4 mt-6">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
@@ -47,11 +56,11 @@ export const FooterSection: React.FC = () => {
                   {social.icon}
                 </a>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* Quick Links */}
-          <div>
+          {/* <div>
             <h4 className="text-lg font-semibold text-white mb-4">Products</h4>
             <ul className="space-y-2">
               {footerLinks.products.map((link) => (
@@ -62,15 +71,18 @@ export const FooterSection: React.FC = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
           <div>
             <h4 className="text-lg font-semibold text-white mb-4">Services</h4>
             <ul className="space-y-2">
               {footerLinks.services.map((link) => (
-                <li key={link}>
-                  <a href="#" className="hover:text-blue-400 transition-colors">
-                    {link}
+                <li key={link.id}>
+                  <a
+                    href={link.url}
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    {link.name}
                   </a>
                 </li>
               ))}
@@ -81,9 +93,12 @@ export const FooterSection: React.FC = () => {
             <h4 className="text-lg font-semibold text-white mb-4">Company</h4>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
-                <li key={link}>
-                  <a href="#" className="hover:text-blue-400 transition-colors">
-                    {link}
+                <li key={link.id}>
+                  <a
+                    href={link.url}
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    {link.name}
                   </a>
                 </li>
               ))}
@@ -95,11 +110,17 @@ export const FooterSection: React.FC = () => {
         <div className="border-t border-gray-800 py-8 text-sm text-center">
           <p>© {new Date().getFullYear()} CEMCS. All rights reserved.</p>
           <p className="mt-2">
-            <a href="#" className="hover:text-blue-400">Privacy Policy</a>
-            {' • '}
-            <a href="#" className="hover:text-blue-400">Terms of Service</a>
-            {' • '}
-            <a href="#" className="hover:text-blue-400">Sitemap</a>
+            <a href="/privacy" className="hover:text-blue-400">
+              Privacy Policy
+            </a>
+            {" • "}
+            {/* <a href="#" className="hover:text-blue-400">
+              Terms of Service
+            </a>
+            {" • "} */}
+            <a href="#" className="hover:text-blue-400">
+              Sitemap
+            </a>
           </p>
         </div>
       </div>

@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import { toast } from '@/hooks/use-toast'
 import { useAuthStore } from '../../../store/authStore'
-import { LoginModal } from '../../../components/LoginModal'
+// import { LoginModal } from '../../../components/LoginModal'
 
 interface HotelFacility {
  facility: string
@@ -113,7 +113,8 @@ const HotelDetails = () => {
 
  const handleBooking = async () => {
   if (!memberDetails?.membership_number) {
-    setShowLoginModal(true);
+    // Redirect to signin page with return URL
+    router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
     return;
   }
 
@@ -122,10 +123,10 @@ const HotelDetails = () => {
     toast({
       title: "Error",
       description: "Please fill all required fields"
-    })
+    });
     return;
   }
- 
+
   try {
     const bookingData = {
       doctype: "Hotel Booking",
@@ -138,18 +139,18 @@ const HotelDetails = () => {
       booking_date: new Date().toISOString().split('T')[0],
       number_of_guests: numGuests,
       special_requests: formData.specialRequests,
-      customer: memberDetails.membership_number, // Add customer field
+      customer: memberDetails.membership_number,
       room_bookingss: [{
         room_type: selectedRoom.room_type,
         number_of_persons: numGuests,
         rate_per_night: selectedRoom.base_price
       }]
     };
- 
+
     console.log('Request Data:', bookingData);
     const response = await axios.post('/api/hotel-booking', bookingData);
     console.log('Response:', response.data);
- 
+
     toast({ title: "Success", description: "Booking confirmed!" });
     router.push('/bookingSuccess');
   } catch (error) {
@@ -161,10 +162,10 @@ const HotelDetails = () => {
   }
 };
 
-const handleLoginSuccess = () => {
-  setShowLoginModal(false);
-  handleBooking();
-};
+// const handleLoginSuccess = () => {
+//   setShowLoginModal(false);
+//   handleBooking();
+// };
 
  if (loading) return <div>Loading...</div>
  if (!hotelData) return <div>No hotel data found</div>
@@ -436,64 +437,17 @@ const handleLoginSuccess = () => {
                    Book Now
                  </Button>
                </div>
-                  {/* <div className='mt-5'>
-                    <div className="flex items-center justify-center w-full border border-gray-200 rounded-md">
-                      <div className="relative w-full" ref={dropdownRef}>
-                        <button
-                          className="text-gray-700 font-semibold py-4 px-2 xl:px-4 w-full rounded inline-flex items-center"
-                          onClick={handleGuestClick}
-                        >
-                          <span className="mr-1">{numGuests} Guests</span>
-                          <svg
-                            className={`fill-current ml-48 xl:ml-40 h-4 w-4 ${showDropdown ? 'transform rotate-180' : ''}`}
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M15 7l-5 5-5-5 1-1 4 4 4-4 1 1z" />
-                          </svg>
-                        </button>
-                        {showDropdown && (
-                          <div className="absolute z-10 mt-1 w-full rounded-md py-3 bg-white drop-shadow-md">
-                            <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                              <div className="flex justify-between items-center">
-                                <div>
-                                  <h1 className="font-bold text-black ml-2">Guest No.</h1>
-                                </div>
-                                <div className="flex space-x-5 justify-center items-center mr-2">
-                                  <button
-                                    className="block px-4 py-2 text-xl font-bold border rounded-full hover:border-black text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                    role="menuitem"
-                                    onClick={handleDecrement}
-                                  >
-                                    -
-                                  </button>
-                                  <span className="text-black">{numGuests}</span>
-                                  <button
-                                    className="block px-4 py-2 text-xl font-bold text-gray-700 border hover:border-black rounded-full hover:bg-gray-100 hover:text-gray-900"
-                                    role="menuitem"
-                                    onClick={handleIncrement}
-                                  >
-                                    +
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                  </div> */}
+                  
                   
                 </div>
               </div>
             </div>
           </div> 
-          <LoginModal 
+          {/* <LoginModal 
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
         onSuccess={handleLoginSuccess}
-      />     
+      />      */}
       </div>
     </div>
   )

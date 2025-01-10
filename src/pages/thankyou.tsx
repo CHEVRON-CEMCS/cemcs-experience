@@ -102,7 +102,7 @@ const ThankYouPage = () => {
  
               {order.payment_method === 'Bank Transfer' ? (
                 <p className='mt-2 text-base text-muted-foreground'>
-                  Please complete your bank transfer using the details provided. We've sent the payment instructions to{' '}
+                  Please complete your bank transfer using the details provided. We've sent the payment instructions to the team.
                   <span className='font-medium text-gray-900'>{order.customer_email}</span>
                 </p>
               ) : (
