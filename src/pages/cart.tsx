@@ -417,80 +417,92 @@ const total = subtotal + transactionFee - voucherDiscount; // Modified this line
                   <div className="text-base font-medium text-gray-900">
                     Order Total
                   </div>
-                  <div className="text-base font-medium text-gray-900">
-                    {formatPrice(total)}
+                  <div className="flex flex-col items-end gap-1">
+                    {voucherDiscount > 0 && (
+                      <>
+                        <div className="text-sm text-gray-500">
+                          <span className="line-through">{formatPrice(subtotal + transactionFee)}</span>
+                        </div>
+                        <div className="text-sm text-green-600">
+                          - {formatPrice(voucherDiscount)} voucher applied
+                        </div>
+                      </>
+                    )}
+                    <div className={`text-base font-medium ${voucherDiscount > 0 ? 'text-green-600' : 'text-gray-900'}`}>
+                      Final Price: {formatPrice(total)}
+                    </div>
                   </div>
                 </div>
  
                 <div className="mt-6 border-t border-gray-200 pt-4">
-  <h3 className="text-lg font-medium mb-1">Voucher</h3>
-  <div className="space-y-4">
-    <div>
-      <Input
-        placeholder="Enter voucher code"
-        value={voucherCode}
-        onChange={(e) => setVoucherCode(e.target.value)}
-        disabled={isApplied}
-        className="mb-2"
-      />
-      <Button 
-        onClick={checkVoucherBalance}
-        disabled={!voucherCode || isChecking || isApplied}
-        variant="outline"
-        className="w-full"
-      >
-        {isChecking ? (
-          <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Checking...</>
-        ) : (
-          'Check Balance'
-        )}
-      </Button>
-    </div>
+                  <h3 className="text-lg font-medium mb-1">Voucher</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Input
+                        placeholder="Enter voucher code"
+                        value={voucherCode}
+                        onChange={(e) => setVoucherCode(e.target.value)}
+                        disabled={isApplied}
+                        className="mb-2"
+                      />
+                      <Button 
+                        onClick={checkVoucherBalance}
+                        disabled={!voucherCode || isChecking || isApplied}
+                        variant="outline"
+                        className="w-full"
+                      >
+                        {isChecking ? (
+                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Checking...</>
+                        ) : (
+                          'Check Balance'
+                        )}
+                      </Button>
+                    </div>
 
-    {/* Add this section to show the balance */}
-    {voucherBalance !== null && (
-  <div className="mt-2 p-3 bg-blue-50 rounded-md">
-    <p className="text-sm text-blue-600">
-      Available Balance: <span className="font-semibold">
-        {formatPrice(voucherBalance)}
-      </span>
-    </p>
-  </div>
-)}
+                    {/* Add this section to show the balance */}
+                    {voucherBalance !== null && (
+                  <div className="mt-2 p-3 bg-blue-50 rounded-md">
+                    <p className="text-sm text-blue-600">
+                      Available Balance: <span className="font-semibold">
+                        {formatPrice(voucherBalance)}
+                      </span>
+                    </p>
+                  </div>
+                )}
 
-    {voucherBalance !== null && (
-      <div>
-        <Input
-          type="number"
-          placeholder="Enter amount to redeem (₦)"
-          value={voucherAmount}
-          onChange={(e) => setVoucherAmount(e.target.value)}
-          disabled={isApplied}
-          className="mb-2"
-          max={voucherBalance}
-        />
-        <Button 
-          onClick={applyVoucher}
-          disabled={!voucherAmount || isRedeeming || isApplied || parseFloat(voucherAmount) > voucherBalance}
-          className="w-full"
-        >
-          {isRedeeming ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Applying...</>
-          ) : (
-            'Apply Voucher'
-          )}
-        </Button>
-      </div>
-    )}
+                    {voucherBalance !== null && (
+                      <div>
+                        <Input
+                          type="number"
+                          placeholder="Enter amount to redeem (₦)"
+                          value={voucherAmount}
+                          onChange={(e) => setVoucherAmount(e.target.value)}
+                          disabled={isApplied}
+                          className="mb-2"
+                          max={voucherBalance}
+                        />
+                        <Button 
+                          onClick={applyVoucher}
+                          disabled={!voucherAmount || isRedeeming || isApplied || parseFloat(voucherAmount) > voucherBalance}
+                          className="w-full"
+                        >
+                          {isRedeeming ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Applying...</>
+                          ) : (
+                            'Apply Voucher'
+                          )}
+                        </Button>
+                      </div>
+                    )}
 
-    {isApplied && (
-      <div className="flex items-center text-sm text-green-600">
-        <Check className="mr-2 h-4 w-4" />
-        Voucher applied successfully
-      </div>
-    )}
-  </div>
-</div>
+                    {isApplied && (
+                      <div className="flex items-center text-sm text-green-600">
+                        <Check className="mr-2 h-4 w-4" />
+                        Voucher applied successfully
+                      </div>
+                    )}
+                  </div>
+                </div>
 
 {/* Add this to show voucher discount in the order summary */}
 {voucherDiscount > 0 && (
