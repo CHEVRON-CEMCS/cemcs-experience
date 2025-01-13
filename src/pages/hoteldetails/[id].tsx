@@ -25,19 +25,24 @@ interface RoomType {
 }
 
 interface HotelDetails {
- hotel_name: string
- code: string
- star_rating: string
- description: string
- address: string
- city: string
- country: string
- phone: string
- check_in_time: string
- check_out_time: string
- status: string
- facilities: HotelFacility[]
- room_types: RoomType[]
+  name: string;
+  hotel_name: string;
+  main_image: string;
+  image_2: string;
+  image_3: string;
+  image_4: string;
+  image_5: string;
+  star_rating: string;
+  description: string;
+  address: string;
+  city: string;
+  country: string;
+  phone: string;
+  check_in_time: string;
+  check_out_time: string;
+  status: string;
+  facilities: HotelFacility[];
+  room_types: RoomType[];
 }
 
 interface BookingData {
@@ -59,42 +64,42 @@ interface RoomBooking {
 }
 
 const HotelDetails = () => {
-  const { memberDetails } = useAuthStore();
- const [hotelData, setHotelData] = useState<HotelDetails | null>(null)
- const [loading, setLoading] = useState(true)
- const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null)
- const [showLoginModal, setShowLoginModal] = useState(false);
- const [numGuests, setNumGuests] = useState(1)
- const [showDropdown, setShowDropdown] = useState(false)
- const [formData, setFormData] = useState({
-   customerName: '',
-   customerEmail: '',
-   customerPhone: '',
-   checkInDate: '',
-   checkOutDate: '',
-   specialRequests: ''
- })
+  const [hotelData, setHotelData] = useState<HotelDetails | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null)
+  const [numGuests, setNumGuests] = useState(1)
+  const [showDropdown, setShowDropdown] = useState(false)
+  const router = useRouter()
+  const { id } = router.query
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
+  const { memberDetails } = useAuthStore()
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://staging.chevroncemcs.com'
+  
+  const [formData, setFormData] = useState({
+    customerName: '',
+    customerEmail: '',
+    customerPhone: '',
+    checkInDate: '',
+    checkOutDate: '',
+    specialRequests: ''
+  })
 
- const router = useRouter()
- const { id } = router.query
- const dropdownRef = useRef<HTMLDivElement | null>(null)
+  useEffect(() => {
+    const fetchHotelDetails = async () => {
+      if (!id) return;
+      
+      try {
+        const response = await axios.get(`/api/Hotel/${id}`)
+        setHotelData(response.data.data)
+      } catch (error) {
+        console.error('Error fetching hotel details:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
 
- useEffect(() => {
-   const fetchHotelDetails = async () => {
-     try {
-       const response = await axios.get(`/api/Hotel/${id}`)
-       setHotelData(response.data.data)
-     } catch (error) {
-       console.error('Error fetching hotel details:', error)
-     } finally {
-       setLoading(false)
-     }
-   }
-
-   if (id) {
-     fetchHotelDetails()
-   }
- }, [id])
+    fetchHotelDetails()
+  }, [id])
 
  const handleGuestClick = () => setShowDropdown(!showDropdown)
  const handleIncrement = () => setNumGuests(numGuests + 1)
@@ -189,8 +194,8 @@ const HotelDetails = () => {
               {/* Big Image */}
               <div className="relative w-full xl:w-1/2 h-full">
                 <Image
-                  src="/home1.jpg"
-                  alt="room image"
+                  src={hotelData.main_image ? `${baseUrl}${hotelData.main_image}` : '/home1.jpg'}
+                  alt={`${hotelData.hotel_name} main image`}
                   className="absolute h-full w-full rounded-md rounded-tl-[10px] rounded-bl-[10px]"
                   layout="fill"
                   objectFit="cover"
@@ -205,8 +210,8 @@ const HotelDetails = () => {
                 <div className="flex justify-between space-x-5">
                   <div className="relative h-[15.688rem] w-1/2 ">
                     <Image
-                  src="/home2.jpg"
-                  alt="room image"
+                      src={hotelData.image_2 ? `${baseUrl}${hotelData.image_2}` : '/home2.jpg'}
+                      alt={`${hotelData.hotel_name} image 2`}
                       className="absolute w-full h-full"
                       layout="fill"
                       objectFit="cover"
@@ -214,8 +219,8 @@ const HotelDetails = () => {
                   </div>
                   <div className="relative h-[15.688rem] w-1/2 ">
                     <Image
-                  src="/home3.jpg"
-                  alt="room image"
+                      src={hotelData.image_3 ? `${baseUrl}${hotelData.image_3}` : '/home3.jpg'}
+                      alt={`${hotelData.hotel_name} image 3`}
                       className="absolute h-full w-full rounded-tr-[10px]"
                       layout="fill"
                       objectFit="cover"
@@ -225,8 +230,8 @@ const HotelDetails = () => {
                 <div className="flex items-center justify-between space-x-5">
                   <div className="relative h-[15.688rem] w-1/2">
                     <Image
-                  src="/home4.jpg"
-                  alt="room image"
+                      src={hotelData.image_4 ? `${baseUrl}${hotelData.image_4}` : '/home4.jpg'}
+                      alt={`${hotelData.hotel_name} image 4`}
                       className="absolute w-full h-full"
                       layout="fill"
                       objectFit="cover"
@@ -234,8 +239,8 @@ const HotelDetails = () => {
                   </div>
                   <div className="relative h-[15.688rem] w-1/2">
                     <Image
-                  src="/home5.jpg"
-                  alt="room image"
+                      src={hotelData.image_5 ? `${baseUrl}${hotelData.image_5}` : '/home5.jpg'}
+                      alt={`${hotelData.hotel_name} image 5`}
                       className="absolute h-full w-full rounded-br-[10px]"
                       layout="fill"
                       objectFit="cover"
