@@ -69,6 +69,10 @@ const HotelDetails = () => {
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
   const [numGuests, setNumGuests] = useState(1);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [checkInDateError, setCheckInDateError] = useState<string | null>(null);
+  const [checkOutDateError, setCheckOutDateError] = useState<string | null>(
+    null
+  );
   const router = useRouter();
   const { id } = router.query;
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -147,8 +151,8 @@ const HotelDetails = () => {
         doctype: "Hotel Booking",
         hotel: id as string,
         guest_name: formData.customerName,
-        customer_email: formData.customerEmail,
-        customer_phone: formData.customerPhone,
+        email: formData.customerEmail,
+        phone: formData.customerPhone,
         check_in_date: formData.checkInDate,
         check_out_date: formData.checkOutDate,
         booking_date: new Date().toISOString().split("T")[0],
@@ -183,6 +187,37 @@ const HotelDetails = () => {
   //   setShowLoginModal(false);
   //   handleBooking();
   // };
+
+  useEffect(() => {
+    // Validate check-in date
+    if (formData.checkInDate && formData.checkOutDate) {
+      const checkIn = new Date(formData.checkInDate);
+      const checkOut = new Date(formData.checkOutDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (checkIn < today) {
+        setCheckInDateError("Check-in date cannot be in the past");
+      } else if (checkIn > checkOut) {
+        setCheckInDateError("Check-in date cannot be after check-out date");
+        setCheckOutDateError(null);
+      } else {
+        setCheckInDateError(null);
+      }
+
+      // Validate check-out date
+      if (checkOut < today) {
+        setCheckOutDateError("Check-out date cannot be in the past");
+      } else if (checkOut < checkIn) {
+        setCheckOutDateError("Check-out date cannot be before check-in date");
+        setCheckInDateError(null);
+      } else {
+        setCheckOutDateError(null);
+      }
+    }
+  }, [formData.checkInDate, formData.checkOutDate]);
+
+  const today = new Date().toISOString().split("T")[0];
 
   if (loading) return <div>Loading...</div>;
   if (!hotelData) return <div>No hotel data found</div>;
@@ -396,7 +431,8 @@ const HotelDetails = () => {
                 {/* Booking Form */}
                 <div className="space-y-4 mt-5">
                   <div>
-                    <Label>Full Name</Label>
+                    <Label>Full Name</Label>{" "}
+                    <span className="text-red-600">*</span>
                     <Input
                       value={formData.customerName}
                       onChange={(e) =>
@@ -411,6 +447,7 @@ const HotelDetails = () => {
 
                   <div>
                     <Label>Email</Label>
+                    <span className="text-red-600">*</span>
                     <Input
                       type="email"
                       value={formData.customerEmail}
@@ -426,6 +463,7 @@ const HotelDetails = () => {
 
                   <div>
                     <Label>Phone Number</Label>
+                    <span className="text-red-600">*</span>
                     <Input
                       type="tel"
                       value={formData.customerPhone}
@@ -450,8 +488,15 @@ const HotelDetails = () => {
                           checkInDate: e.target.value,
                         })
                       }
+                      min={today}
+                      className={checkInDateError ? "border-red-500" : ""}
                       required
                     />
+                    {checkInDateError && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {checkInDateError}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -459,14 +504,21 @@ const HotelDetails = () => {
                     <Input
                       type="date"
                       value={formData.checkOutDate}
+                      min={formData.checkInDate || today}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
                           checkOutDate: e.target.value,
                         })
                       }
+                      className={checkOutDateError ? "border-red-500" : ""}
                       required
                     />
+                    {checkOutDateError && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {checkOutDateError}
+                      </p>
+                    )}
                   </div>
 
                   <div>
