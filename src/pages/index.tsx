@@ -15,9 +15,10 @@ function App() {
       <NavLanding />
       <main>
         <HeroSlider />
+        <ProductsSection />
         <FeaturesGrid />
         <ServiceSection />
-        <ProductsSection />
+        {/* <ProductsSection /> */}
         {/* <StatsSection /> */}
         <CtaSection />
       </main>

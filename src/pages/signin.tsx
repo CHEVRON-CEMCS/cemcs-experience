@@ -4,12 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { Building2, Users, UserRound, AlertCircle } from "lucide-react";
 
-import signinPic from '../../public/signinPic.jpg';
+import signinPic from "../../public/signinPic.jpg";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { useAuthStore } from "../../store/authStore";
 
 interface UserType {
@@ -22,26 +27,26 @@ interface UserType {
 
 const userTypes: UserType[] = [
   {
-    id: 'retiree',
-    title: 'Retiree',
-    description: 'Access your retirement portal',
+    id: "retiree",
+    title: "Retiree",
+    description: "Access your retirement portal",
     icon: UserRound,
-    baseUrl: 'retiree.chevroncemcs.com'
+    baseUrl: "retiree.chevroncemcs.com",
   },
   {
-    id: 'member',
-    title: 'Member',
-    description: 'Access your member dashboard',
+    id: "member",
+    title: "Member",
+    description: "Access your member dashboard",
     icon: Users,
-    baseUrl: 'member.chevroncemcs.com'
+    baseUrl: "member.chevroncemcs.com",
   },
   {
-    id: 'staff',
-    title: 'CEMCS Staff',
-    description: 'Access the ERP system',
+    id: "staff",
+    title: "CEMCS Staff",
+    description: "Access the ERP system",
     icon: Building2,
-    baseUrl: 'erp.chevroncemcs.com'
-  }
+    baseUrl: "erp.chevroncemcs.com",
+  },
 ];
 
 export default function SignIn() {
@@ -65,7 +70,9 @@ export default function SignIn() {
       await login(email, password, selectedType.baseUrl);
       router.push("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unexpected error occurred");
+      setError(
+        err instanceof Error ? err.message : "An unexpected error occurred"
+      );
     }
   };
 
@@ -87,10 +94,10 @@ export default function SignIn() {
                 Please select your user type to continue
               </p>
             </div>
-            
+
             <div className="grid gap-4">
               {userTypes.map((type) => (
-                <Card 
+                <Card
                   key={type.id}
                   className="cursor-pointer transition-all hover:bg-accent hover:shadow-md"
                   onClick={() => setSelectedType(type)}
@@ -123,8 +130,8 @@ export default function SignIn() {
   return (
     <div className="h-screen w-full lg:grid lg:grid-cols-2 overflow-hidden">
       <div className="flex flex-col items-center justify-center py-12 h-screen relative">
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           className="absolute left-4 top-4"
           onClick={handleBack}
         >
@@ -163,20 +170,16 @@ export default function SignIn() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input 
-                id="password" 
-                type="password" 
+              <Input
+                id="password"
+                type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full"
               />
             </div>
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Logging in..." : "Login"}
             </Button>
           </div>

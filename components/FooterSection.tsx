@@ -35,15 +35,17 @@ export const FooterSection: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <MapPin className="h-5 w-5 text-blue-400" />
-                <span>Udeco Medical Rd, Chevy View Estate, Lekki, Lagos</span>
+                <span>
+                  Plot 6 Udeco Medical Rd, Chevy View Estate, Lekki, Lagos
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-blue-400" />
-                <span>1-800-123-4567</span>
+                <span>08092362752, 09060672621</span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-blue-400" />
-                <span>contact@cemcs.com</span>
+                <span>L9lek325-smb@chevron.com</span>
               </div>
             </div>
             {/* <div className="flex gap-4 mt-6">
