@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { Building2, Users, UserRound, AlertCircle } from "lucide-react";
 
 import signinPic from "../../public/signinPic.jpg";
+import Reception from "../../public/Reception.jpg";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -118,7 +119,7 @@ export default function SignIn() {
         </div>
         <div className="hidden bg-muted lg:block">
           <Image
-            src={signinPic}
+            src={Reception}
             alt="Sign in"
             className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
           />
@@ -183,17 +184,17 @@ export default function SignIn() {
               {isLoading ? "Logging in..." : "Login"}
             </Button>
           </div>
-          <div className="mt-4 text-center text-sm">
+          {/* <div className="mt-4 text-center text-sm">
             Don't have an account?{" "}
             <Link href="/" className="underline">
               Sign up
             </Link>
-          </div>
+          </div> */}
         </form>
       </div>
       <div className="hidden bg-muted lg:block">
         <Image
-          src={signinPic}
+          src={Reception}
           alt="Sign in"
           className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />

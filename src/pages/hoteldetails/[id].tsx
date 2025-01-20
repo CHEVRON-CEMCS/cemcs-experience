@@ -11,11 +11,20 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
 import { useAuthStore } from "../../../store/authStore";
+import ImageModal from "../../../components/ImageModal";
 // import { LoginModal } from '../../../components/LoginModal'
 
 interface HotelFacility {
   facility: string;
   category: string;
+}
+
+interface HotelImages {
+  main_image: string;
+  image_2: string;
+  image_3: string;
+  image_4: string;
+  image_5: string;
 }
 
 interface RoomType {
@@ -65,6 +74,8 @@ interface RoomBooking {
 
 const HotelDetails = () => {
   const [hotelData, setHotelData] = useState<HotelDetails | null>(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState<boolean>(false);
+
   const [loading, setLoading] = useState(true);
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
   const [numGuests, setNumGuests] = useState(1);
@@ -105,6 +116,19 @@ const HotelDetails = () => {
 
     fetchHotelDetails();
   }, [id]);
+
+  const getAllImages = (): string[] => {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
+    if (!hotelData) return [];
+    
+    return [
+      hotelData.main_image ? `${baseUrl}${hotelData.main_image}` : "/home1.jpg",
+      hotelData.image_2 ? `${baseUrl}${hotelData.image_2}` : "/home2.jpg",
+      hotelData.image_3 ? `${baseUrl}${hotelData.image_3}` : "/home3.jpg",
+      hotelData.image_4 ? `${baseUrl}${hotelData.image_4}` : "/home4.jpg",
+      hotelData.image_5 ? `${baseUrl}${hotelData.image_5}` : "/home5.jpg",
+    ];
+  };
 
   const handleGuestClick = () => setShowDropdown(!showDropdown);
   const handleIncrement = () => setNumGuests(numGuests + 1);
@@ -253,7 +277,10 @@ const HotelDetails = () => {
                 layout="fill"
                 objectFit="cover"
               />
-              <button className="xl:hidden flex justify-center items-center absolute bottom-0 left-1/2 transform -translate-x-1/5 -translate-y-1/2 mt-7 h-[2.375rem] w-[10rem] rounded-[10px] border border-black bg-white hover:bg-[#F7F7F7] text-sm font-medium text-black">
+              <button 
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => setIsImageModalOpen(true)}
+                className="xl:hidden flex justify-center items-center absolute bottom-0 left-1/2 transform -translate-x-1/5 -translate-y-1/2 mt-7 h-[2.375rem] w-[10rem] rounded-[10px] border border-black bg-white hover:bg-[#F7F7F7] text-sm font-medium text-black"
+              >
                 <TbGridDots className="w-4 h-4 mr-2" />
                 Show all Photos
               </button>
@@ -314,7 +341,10 @@ const HotelDetails = () => {
                     layout="fill"
                     objectFit="cover"
                   />
-                  <button className="flex justify-center items-center absolute bottom-0 left-1/2 transform -translate-x-1/3 -translate-y-1/2 mt-7 h-[2.375rem] w-[10rem] rounded-[10px] border border-black bg-white hover:bg-[#F7F7F7] text-sm font-medium text-black">
+                  <button 
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => setIsImageModalOpen(true)}
+                    className="flex justify-center items-center absolute bottom-0 left-1/2 transform -translate-x-1/3 -translate-y-1/2 mt-7 h-[2.375rem] w-[10rem] rounded-[10px] border border-black bg-white hover:bg-[#F7F7F7] text-sm font-medium text-black"
+                  >
                     <TbGridDots className="w-4 h-4 mr-2" />
                     Show all Photos
                   </button>
@@ -585,6 +615,11 @@ const HotelDetails = () => {
         onSuccess={handleLoginSuccess}
       />      */}
       </div>
+      <ImageModal 
+  images={getAllImages()}
+  isOpen={isImageModalOpen}
+  onClose={() => setIsImageModalOpen(false)}
+/>
     </div>
   );
 };
