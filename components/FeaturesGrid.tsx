@@ -1,22 +1,23 @@
-import React from 'react';
-import { Shield, Percent, CreditCard } from 'lucide-react';
-import { FeatureCard } from './FeatureCard';
+import React from "react";
+import { Percent, Gauge, CreditCard } from "lucide-react";
+import { FeatureCard } from "./FeatureCard";
 
 const features = [
   {
-    Icon: Shield,
-    title: 'Secure Banking',
-    description: 'Your security is our top priority with advanced encryption and fraud protection.',
+    Icon: Percent,
+    title: "Save More, Shop More",
+    description: "Unlock special offers and discounts on select items.",
   },
   {
-    Icon: Percent,
-    title: 'Great Rates',
-    description: 'Enjoy competitive rates on savings accounts and loans.',
+    Icon: Gauge,
+    title: "Speed",
+    description: "Enjoy competitive rates on savings accounts and loans.",
   },
   {
     Icon: CreditCard,
-    title: 'Digital Banking',
-    description: 'Access your accounts anytime, anywhere with our digital banking solutions.',
+    title: "Digital Banking",
+    description:
+      "Access your accounts anytime, anywhere with our digital banking solutions.",
   },
 ];
 

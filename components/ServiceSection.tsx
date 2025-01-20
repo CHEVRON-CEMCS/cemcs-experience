@@ -5,26 +5,25 @@ const products = [
   {
     icon: <ShoppingCart className="h-8 w-8 text-blue-600" />,
     title: "E-Commerce Store",
-    description:
-      "Streamline your shopping journey with features that make browsing, purchasing, and checkout quick and intuitive with exclusive offers.",
+    description: "Streamline your shopping journey exclusive offers.",
     link: "/shop",
   },
   {
     icon: <Map className="h-8 w-8 text-blue-600" />,
     title: "Travels",
-    description: "Find the perfect home loan for your needs.",
+    description: "Plan your trip with tailored financial solutions.",
     link: "/reservations",
   },
   {
     icon: <Bed className="h-8 w-8 text-blue-600" />,
     title: "Hotel Bookings",
-    description: "Competitive rates for your next vehicle purchase.",
+    description: "Secure competitive rates for a comfortable stay.",
     link: "/hotelBooking",
   },
   {
     icon: <Shield className="h-8 w-8 text-blue-600" />,
     title: "Insurance",
-    description: "Solutions to help your business grow.",
+    description: "Protect your business with customized solutions.",
     // link: "#",
   },
 ];
