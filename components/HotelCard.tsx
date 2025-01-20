@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 interface HotelBooking {
   name: string;
   hotel_name: string;
-  logo: string;
+  logo?: string; 
 }
 
 export function HotelCard({ booking }: { booking: HotelBooking }) {
@@ -25,10 +25,10 @@ export function HotelCard({ booking }: { booking: HotelBooking }) {
     };
 
     fetchHotelImage();
-  });
+  }, []);
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || `https://staging.chevroncemcs.com$`;
+    process.env.NEXT_PUBLIC_API_BASE_URL || `https://staging.chevroncemcs.com`;
   const imageUrl = hotelLogo ? `${baseUrl}${hotelLogo}` : "/hotelimage.jpg";
 
   return (
