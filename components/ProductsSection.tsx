@@ -30,7 +30,7 @@ const products = [
 
 export const ProductsSection: React.FC = () => {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-12">
           Our Financial Products
@@ -40,7 +40,7 @@ export const ProductsSection: React.FC = () => {
             <a
               key={product.title}
               // href={product.link}
-              className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+              className=" p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="mb-4">{product.icon}</div>
               <h3 className="text-xl font-semibold mb-2">{product.title}</h3>

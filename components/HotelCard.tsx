@@ -1,19 +1,41 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface HotelBooking {
   name: string;
   hotel_name: string;
+  logo: string;
 }
 
 export function HotelCard({ booking }: { booking: HotelBooking }) {
+  const [hotelLogo, setHotelLogo] = useState("");
+
+  useEffect(() => {
+    const fetchHotelImage = async () => {
+      try {
+        const response = await axios.get(`/api/Hotel/${booking.name}`);
+        setHotelLogo(response.data.data.logo);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchHotelImage();
+  });
+
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || `https://staging.chevroncemcs.com$`;
+  const imageUrl = hotelLogo ? `${baseUrl}${hotelLogo}` : "/hotelimage.jpg";
+
   return (
     <div className="rounded-lg">
       <div className="relative h-[250px]">
         <Image
-          src="/hotelimage.jpg"
+          src={imageUrl}
           alt="Hotel Image"
           fill
           className="object-cover object-center w-full h-full rounded-lg"
