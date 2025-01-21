@@ -268,6 +268,7 @@ const Cart = () => {
       console.log("Order Data:", orderData);
       const response = await axios.post("/api/product-order", orderData);
       console.log("Checkout Response:", response.data);
+      localStorage.setItem("productOrder_id", response.data.data.name);
 
       // Only clear cart after successful navigation
       const orderDetails = {

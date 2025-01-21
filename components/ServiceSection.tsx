@@ -24,7 +24,7 @@ const products = [
     icon: <Shield className="h-8 w-8 text-blue-600" />,
     title: "Insurance",
     description: "Protect your business with customized solutions.",
-    // link: "#",
+    link: "/insurance",
   },
 ];
 
