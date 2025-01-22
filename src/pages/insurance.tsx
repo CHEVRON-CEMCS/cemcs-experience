@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import HomePage from "../../components/HomeInsurance";
+import ClaimsPage from "../../components/ClaimsPage";
 
 // Define the store type
 interface PageStore {
@@ -29,9 +31,9 @@ const insurance = () => {
 
   const pages = [
     { id: "home", title: "Home" },
-    { id: "policies", title: "Policies" },
+    // { id: "policies", title: "Policies" },
     { id: "claims", title: "Claims" },
-    { id: "profile", title: "Profile" },
+    // { id: "profile", title: "Profile" },
   ];
 
   return (
@@ -95,9 +97,17 @@ const insurance = () => {
       {/* Main content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card className="p-6">
-          {currentPage === "home" && <div>Home Page Content</div>}
+          {currentPage === "home" && (
+            <div>
+              <HomePage />
+            </div>
+          )}
           {currentPage === "policies" && <div>Policies Page Content</div>}
-          {currentPage === "claims" && <div>Claims Page Content</div>}
+          {currentPage === "claims" && (
+            <div>
+              <ClaimsPage />
+            </div>
+          )}
           {currentPage === "profile" && <div>Profile Page Content</div>}
         </Card>
       </main>
