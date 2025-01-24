@@ -21,6 +21,7 @@ const Reservations = () => {
   const [error, setError] = useState<string | null>(null);
   const { isAuthenticated } = useAuthStore();
   console.log("User Authenticated?:", isAuthenticated);
+
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -46,7 +47,6 @@ const Reservations = () => {
     fetchBookings();
   }, []);
 
-  // Local array of card data
   const data = [
     { img: "/Singapore.png", location: "Singapore", distance: "Visa" },
     { img: "/france.png", location: "Paris", distance: "Visa" },
@@ -62,18 +62,18 @@ const Reservations = () => {
   return (
     <div>
       <NavTravel />
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div>
           <ReservationSlider />
         </div>
         <div className="mt-8">
-          <h2 className="text-2xl font-semibold pb-1">Visa Applications</h2>
-          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {" "}
-            {/* Mapping over the array and rendering SmallCard components */}
+          <h2 className="text-lg sm:text-2xl font-semibold pb-1">
+            Visa Applications
+          </h2>
+          <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {data.map(({ img, location, distance }) => (
               <SmallCard
-                key={img} // Using img as the unique key
+                key={img}
                 img={img}
                 distance={distance}
                 location={location}
@@ -83,11 +83,11 @@ const Reservations = () => {
         </div>
 
         <div>
-          <h1 className="text-2xl font-semibold pb-1 mt-10">
+          <h1 className="text-lg sm:text-2xl font-semibold pb-1 mt-10">
             Explore Hotel Bookings
           </h1>
         </div>
-        <div className="w-full grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-10 lg:gap-x-8 mt-8 mb-10">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 lg:gap-x-8 mt-8 mb-10">
           {loading ? (
             <>
               <LoadingHotelCard />
@@ -106,7 +106,7 @@ const Reservations = () => {
         <div>
           <AppleCardsCarouselDemo />
         </div>
-        <div>
+        <div className="mt-10">
           <LargeCard
             img="/large.jpg"
             title="The Greatest Outdoors"
@@ -115,7 +115,7 @@ const Reservations = () => {
           />
         </div>
 
-        <div>
+        <div className="mt-10">
           <Footer />
         </div>
       </div>
