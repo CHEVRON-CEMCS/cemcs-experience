@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { NavTravel } from '../../components/NavTravel';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { NavTravel } from "../../components/NavTravel";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,10 +12,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { FlightBooking } from '../../types/flight';
-import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/router';
-import { useAuthStore } from '../../store/authStore';
+import { FlightBooking } from "../../types/flight";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/router";
+import { useAuthStore } from "../../store/authStore";
 // import { LoginModal } from '../../components/LoginModal';
 
 const Travel = () => {
@@ -24,37 +24,40 @@ const Travel = () => {
   const { memberDetails } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [checkDeparture, setCheckDeparture] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    flyingFrom: '',
-    flyingTo: '',
-    tripType: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    flyingFrom: "",
+    flyingTo: "",
+    tripType: "",
     adults: 1,
     children: 0,
-    preferredAirline: '',
-    departureDate: '',
-    returnDate: '',
-    additionalInfo: '',
-    flightNumber: '123',  
-  returnFlightNumber: '456',
-  dateOfBirth: '1920-01-01', 
+    preferredAirline: "",
+    departureDate: "",
+    returnDate: "",
+    additionalInfo: "",
+    flightNumber: "123",
+    returnFlightNumber: "456",
+    dateOfBirth: "1920-01-01",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -66,82 +69,82 @@ const Travel = () => {
     }
 
     setIsLoading(true);
-  
+
     try {
       const bookingData: FlightBooking = {
-        booking_date: new Date().toISOString().split('T')[0],
-        booking_status: 'Draft',
+        booking_date: new Date().toISOString().split("T")[0],
+        booking_status: "Draft",
         booking_type: formData.tripType,
         contact_email: formData.email,
         contact_phone: formData.phone,
         customer: memberDetails.membership_number,
         flight_segments: [
           {
-            flight_number: formData.flightNumber, 
+            flight_number: formData.flightNumber,
             airline: formData.preferredAirline,
             from_city: formData.flyingFrom,
             to_city: formData.flyingTo,
             departure_date: formData.departureDate,
-            departure_time: '00:00:00',
+            departure_time: "00:00:00",
             arrival_date: formData.departureDate,
-            arrival_time: '00:00:00',
-            cabin_class: 'Economy',
-            segment_status: 'Scheduled'
-          }
+            arrival_time: "00:00:00",
+            cabin_class: "Economy",
+            segment_status: "Scheduled",
+          },
         ],
         passengers: [
           {
-            passenger_type: 'Adult',
-            title: 'Mr',
+            passenger_type: "Adult",
+            title: "Mr",
             first_name: formData.firstName,
             last_name: formData.lastName,
-            gender: 'Male', 
-            dob: formData.dateOfBirth, 
-          }
+            gender: "Male",
+            dob: formData.dateOfBirth,
+          },
         ],
-        currency: 'USD',
+        currency: "USD",
         base_fare: 0,
         taxes: 0,
         total_amount: 0,
-        special_requests: formData.additionalInfo
+        special_requests: formData.additionalInfo,
       };
-  
-      if (formData.tripType === 'Round Trip' && formData.returnDate) {
+
+      if (formData.tripType === "Round Trip" && formData.returnDate) {
         bookingData.flight_segments.push({
-          flight_number: formData.returnFlightNumber, 
+          flight_number: formData.returnFlightNumber,
           airline: formData.preferredAirline,
           from_city: formData.flyingTo,
           to_city: formData.flyingFrom,
           departure_date: formData.returnDate,
-          departure_time: '00:00:00',
+          departure_time: "00:00:00",
           arrival_date: formData.returnDate,
-          arrival_time: '00:00:00',
-          cabin_class: 'Economy',
-          segment_status: 'Scheduled'
+          arrival_time: "00:00:00",
+          cabin_class: "Economy",
+          segment_status: "Scheduled",
         });
       }
-  
-      const response = await axios.post('/api/flight-booking', bookingData);
-      console.log('res:', response);
-  
+
+      const response = await axios.post("/api/flight-booking", bookingData);
+      console.log("res:", response);
+
       toast({
         title: "Success",
         description: "Flight booking request submitted successfully!",
       });
 
-      router.push('/flightSuccess');
-  
+      router.push("/flightSuccess");
     } catch (error: any) {
-      console.error('Booking error:', error);
-      
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.exception || 
-                          'Failed to submit booking request. Please try again.';
-                          
+      console.error("Booking error:", error);
+
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.exception ||
+        "Failed to submit booking request. Please try again.";
+
       toast({
         title: "Error",
         description: errorMessage,
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -157,29 +160,32 @@ const Travel = () => {
   //   setShowLoginModal(false);
   //   submitBooking();
   // };
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <div>
       <NavTravel />
-      <div className="xl:mx-auto mb-14 xl:max-w-7xl xl:px-10 mt-8">
-        <div className='max-w-4xl mx-auto'>
+      <div className="px-4 sm:px-6 xl:mx-auto mb-14 xl:max-w-7xl xl:px-10 mt-8">
+        <div className="max-w-4xl mx-auto">
           <div>
-            <h1 className='text-center mb-10 font-bold text-3xl'>BOOK FLIGHT</h1>
+            <h1 className="text-center mb-10 font-bold text-xl sm:text-3xl">
+              BOOK FLIGHT
+            </h1>
           </div>
           <form onSubmit={handleSubmit}>
-            <div className='flex space-x-5 w-full items-center'>
+            <div className="flex flex-col sm:flex-row sm:space-x-5 w-full items-center">
               <div className="flex-1">
                 <Label>First Name</Label>
-                <Input 
+                <Input
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="flex-1">
+              <div className="flex-1 mt-4 sm:mt-0">
                 <Label>Last Name</Label>
-                <Input 
+                <Input
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
@@ -187,10 +193,11 @@ const Travel = () => {
                 />
               </div>
             </div>
-            <div className='mt-5 flex flex-col space-y-5'>
+
+            <div className="mt-5 space-y-5">
               <div>
                 <Label>Email Address</Label>
-                <Input 
+                <Input
                   name="email"
                   type="email"
                   value={formData.email}
@@ -201,7 +208,7 @@ const Travel = () => {
 
               <div>
                 <Label>Phone Number</Label>
-                <Input 
+                <Input
                   name="phone"
                   type="tel"
                   value={formData.phone}
@@ -212,7 +219,7 @@ const Travel = () => {
 
               <div>
                 <Label>Flying From</Label>
-                <Input 
+                <Input
                   name="flyingFrom"
                   value={formData.flyingFrom}
                   onChange={handleChange}
@@ -222,7 +229,7 @@ const Travel = () => {
 
               <div>
                 <Label>Flying To</Label>
-                <Input 
+                <Input
                   name="flyingTo"
                   value={formData.flyingTo}
                   onChange={handleChange}
@@ -232,7 +239,11 @@ const Travel = () => {
 
               <div>
                 <Label>Select Trip</Label>
-                <Select onValueChange={(value) => handleSelectChange('tripType', value)}>
+                <Select
+                  onValueChange={(value) =>
+                    handleSelectChange("tripType", value)
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select Trip" />
                   </SelectTrigger>
@@ -245,19 +256,20 @@ const Travel = () => {
 
               <div>
                 <Label>Departure Date</Label>
-                <Input 
+                <Input
                   name="departureDate"
                   type="date"
                   value={formData.departureDate}
                   onChange={handleChange}
                   required
+                  min={today}
                 />
               </div>
 
-              {formData.tripType === 'Round Trip' && (
+              {formData.tripType === "Round Trip" && (
                 <div>
                   <Label>Return Date</Label>
-                  <Input 
+                  <Input
                     name="returnDate"
                     type="date"
                     value={formData.returnDate}
@@ -269,7 +281,7 @@ const Travel = () => {
 
               <div>
                 <Label>Number of Adults</Label>
-                <Input 
+                <Input
                   name="adults"
                   type="number"
                   min="1"
@@ -281,7 +293,7 @@ const Travel = () => {
 
               <div>
                 <Label>Number of Children (Optional)</Label>
-                <Input 
+                <Input
                   name="children"
                   type="number"
                   min="0"
@@ -292,7 +304,7 @@ const Travel = () => {
 
               <div>
                 <Label>Preferred Airline</Label>
-                <Input 
+                <Input
                   name="preferredAirline"
                   value={formData.preferredAirline}
                   onChange={handleChange}
@@ -301,7 +313,7 @@ const Travel = () => {
 
               <div>
                 <Label>Additional Information</Label>
-                <Textarea 
+                <Textarea
                   name="additionalInfo"
                   value={formData.additionalInfo}
                   onChange={handleChange}
@@ -309,20 +321,15 @@ const Travel = () => {
                 />
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full"
+              <Button
+                type="submit"
+                className="w-full mt-5"
                 disabled={isLoading}
               >
-                {isLoading ? 'Submitting...' : 'Book Flight'}
+                {isLoading ? "Submitting..." : "Book Flight"}
               </Button>
             </div>
           </form>
-          {/* <LoginModal 
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        onSuccess={handleLoginSuccess}
-      /> */}
         </div>
       </div>
     </div>
