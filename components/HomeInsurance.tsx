@@ -59,6 +59,7 @@ const HomePage = () => {
         "Preventive Care",
         "Specialist Consultations",
       ],
+      hasForm: true,
     },
   ];
 
@@ -74,7 +75,15 @@ const HomePage = () => {
 
   const handleContinue = (insuranceType: any) => {
     if (insuranceType.title === "Property Insurance") {
-      router.push("/PropertyInsurance");
+      router.push("/InsuranceForm");
+    }
+
+    if (insuranceType.title === "Vehicle Insurance") {
+      router.push("/InsuranceForm");
+    }
+
+    if (insuranceType.title === "Health Insurance") {
+      router.push("/InsuranceForm");
     }
   };
 
@@ -140,7 +149,8 @@ const HomePage = () => {
                           className="w-full mt-4"
                           onClick={() => handleContinue(insurance)}
                         >
-                          {`Click to Insure ${insurance.title === "Property Insurance" ? "Property" : insurance.title || insurance.title === "Vehicle Insurance" ? "Vehicle" : null}`}
+                          {/* {`Click to Insure ${insurance.title === "Property Insurance" ? "Property" : insurance.title || insurance.title === "Vehicle Insurance" ? "Vehicle" : null}`} */}
+                          Click to indicate interest
                         </Button>
                       )}
                     </div>

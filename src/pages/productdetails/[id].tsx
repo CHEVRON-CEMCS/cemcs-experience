@@ -68,10 +68,24 @@ export default function ProductIdRoute() {
   if (loading) return <div>Loading...</div>;
   if (!product) return <div>Product not found</div>;
 
+  const handleBack = () => {
+    router.push("/shop");
+    return;
+  };
+
   return (
     <div>
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="block md:hidden mb-2">
+          <Button
+            onClick={handleBack}
+            className="flex items-center gap-2 text-sm font-medium text-black-700 py-2 px-4 bg-gray-200 rounded-md hover:bg-gray-300"
+          >
+            ← Back
+          </Button>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           {/* Product Image */}
           <Image

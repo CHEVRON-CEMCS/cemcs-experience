@@ -326,10 +326,22 @@ const Cart = () => {
     );
   }
 
+  const handleBack = () => {
+    router.push("/shop");
+  };
+
   return (
     <div>
       <Navbar />
       <div className="bg-white max-w-7xl mx-auto">
+        <div className="block md:hidden mb-2 ml-4">
+          <Button
+            onClick={handleBack}
+            className="flex items-center gap-2 text-sm font-medium text-black-700 py-2 px-4 bg-gray-200 rounded-md hover:bg-gray-300"
+          >
+            ← Back
+          </Button>
+        </div>
         <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Shopping Cart

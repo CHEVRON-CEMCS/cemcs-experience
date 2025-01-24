@@ -162,10 +162,22 @@ const Travel = () => {
   // };
   const today = new Date().toISOString().split("T")[0];
 
+  const handleBack = () => {
+    router.push("/reservations");
+  };
+
   return (
     <div>
       <NavTravel />
       <div className="px-4 sm:px-6 xl:mx-auto mb-14 xl:max-w-7xl xl:px-10 mt-8">
+        <div className="block md:hidden mb-2">
+          <Button
+            onClick={handleBack}
+            className="flex items-center gap-2 text-sm font-medium text-black-700 py-2 px-4 bg-gray-200 rounded-md hover:bg-gray-300"
+          >
+            ← Back
+          </Button>
+        </div>
         <div className="max-w-4xl mx-auto">
           <div>
             <h1 className="text-center mb-10 font-bold text-xl sm:text-3xl">

@@ -32,7 +32,7 @@ const insurance = () => {
   const pages = [
     { id: "home", title: "Home" },
     // { id: "policies", title: "Policies" },
-    { id: "claims", title: "Claims" },
+    // { id: "claims", title: "Claims" },
     // { id: "profile", title: "Profile" },
   ];
 

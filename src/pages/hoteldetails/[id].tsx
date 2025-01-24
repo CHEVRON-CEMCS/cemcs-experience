@@ -248,10 +248,22 @@ const HotelDetails = () => {
   if (loading) return <div>Loading...</div>;
   if (!hotelData) return <div>No hotel data found</div>;
 
+  const handleBack = () => {
+    router.push("/reservations");
+  };
+
   return (
     <div>
       <NavTravel />
       <div className="mx-auto mb-14 max-w-full px-4 md:px-6 xl:max-w-7xl xl:px-10 mt-8">
+        <div className="block md:hidden mb-2">
+          <Button
+            onClick={handleBack}
+            className="flex items-center gap-2 text-sm font-medium text-black-700 py-2 px-4 bg-gray-200 rounded-md hover:bg-gray-300"
+          >
+            ← Back
+          </Button>
+        </div>
         <div>
           <h1 className="text-2xl sm:text-2xl md:text-4xl font-bold text-gray-800 font-sora">
             {hotelData.hotel_name}
