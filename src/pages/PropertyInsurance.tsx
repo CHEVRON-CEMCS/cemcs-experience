@@ -313,7 +313,11 @@ const PropertyInsuranceForm = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row justify-end gap-4">
-                <Button variant="outline" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  onClick={handleBack}
+                >
                   Cancel
                 </Button>
                 <Button className="w-full sm:w-auto">Submit Application</Button>

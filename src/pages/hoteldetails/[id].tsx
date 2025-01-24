@@ -118,9 +118,11 @@ const HotelDetails = () => {
   }, [id]);
 
   const getAllImages = (): string[] => {
-    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
+    const baseUrl =
+      process.env.NEXT_PUBLIC_API_BASE_URL ||
+      "https://staging.chevroncemcs.com";
     if (!hotelData) return [];
-    
+
     return [
       hotelData.main_image ? `${baseUrl}${hotelData.main_image}` : "/home1.jpg",
       hotelData.image_2 ? `${baseUrl}${hotelData.image_2}` : "/home2.jpg",
@@ -249,23 +251,24 @@ const HotelDetails = () => {
   return (
     <div>
       <NavTravel />
-      <div className="xl:mx-auto mb-14 xl:max-w-7xl xl:px-10 mt-8">
-        <div className="">
-          <h1 className="text-2xl font-bold text-gray-800 font-sora">
+      <div className="mx-auto mb-14 max-w-full px-4 md:px-6 xl:max-w-7xl xl:px-10 mt-8">
+        <div>
+          <h1 className="text-2xl sm:text-2xl md:text-4xl font-bold text-gray-800 font-sora">
             {hotelData.hotel_name}
           </h1>
-          <div className="flex items-center mt-2 space-x-2">
+          <div className="flex flex-wrap items-center mt-2 space-x-2 text-sm sm:text-base">
             <span>{hotelData.star_rating} Star Hotel</span>
             <span>
               {hotelData.city}, {hotelData.country}
             </span>
           </div>
         </div>
-        <div className="mt-9">
-          {/* Image player ideally */}
-          <div className="flex h-[32.5rem] w-full">
+
+        <div className="mt-6 md:mt-9">
+          {/* Image Player */}
+          <div className="flex flex-col md:flex-row h-auto md:h-[32.5rem] w-full">
             {/* Big Image */}
-            <div className="relative w-full xl:w-1/2 h-full">
+            <div className="relative w-full md:w-1/2 h-64 sm:h-96 md:h-full">
               <Image
                 src={
                   hotelData.main_image
@@ -273,140 +276,75 @@ const HotelDetails = () => {
                     : "/home1.jpg"
                 }
                 alt={`${hotelData.hotel_name} main image`}
-                className="absolute h-full w-full rounded-md rounded-tl-[10px] rounded-bl-[10px]"
+                className="absolute h-full w-full rounded-md md:rounded-tl-[10px] md:rounded-bl-[10px]"
                 layout="fill"
                 objectFit="cover"
               />
-              <button 
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) => setIsImageModalOpen(true)}
-                className="xl:hidden flex justify-center items-center absolute bottom-0 left-1/2 transform -translate-x-1/5 -translate-y-1/2 mt-7 h-[2.375rem] w-[10rem] rounded-[10px] border border-black bg-white hover:bg-[#F7F7F7] text-sm font-medium text-black"
+              <button
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  setIsImageModalOpen(true)
+                }
+                className="block md:hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 mt-4 px-4 py-2 bg-white border border-black rounded-lg text-sm font-medium"
               >
-                <TbGridDots className="w-4 h-4 mr-2" />
+                <TbGridDots className="inline w-4 h-4 mr-2" />
                 Show all Photos
               </button>
             </div>
-            {/* Sub images */}
-            <div className="flex xl:flex flex-col justify-between w-1/2 h-full ml-6">
-              <div className="flex justify-between space-x-5">
-                <div className="relative h-[15.688rem] w-1/2 ">
+
+            {/* Sub Images */}
+            <div className="hidden md:flex flex-col justify-between w-1/2 h-full ml-6 space-y-4">
+              {[
+                hotelData.image_2,
+                hotelData.image_3,
+                hotelData.image_4,
+                hotelData.image_5,
+              ].map((img, index) => (
+                <div
+                  key={index}
+                  className="relative w-full h-40 sm:h-48 md:h-[15.688rem] rounded-lg overflow-hidden"
+                >
                   <Image
-                    src={
-                      hotelData.image_2
-                        ? `${baseUrl}${hotelData.image_2}`
-                        : "/home2.jpg"
-                    }
-                    alt={`${hotelData.hotel_name} image 2`}
-                    className="absolute w-full h-full"
+                    src={img ? `${baseUrl}${img}` : `/home${index + 2}.jpg`}
+                    alt={`${hotelData.hotel_name} image ${index + 2}`}
                     layout="fill"
                     objectFit="cover"
                   />
                 </div>
-                <div className="relative h-[15.688rem] w-1/2 ">
-                  <Image
-                    src={
-                      hotelData.image_3
-                        ? `${baseUrl}${hotelData.image_3}`
-                        : "/home3.jpg"
-                    }
-                    alt={`${hotelData.hotel_name} image 3`}
-                    className="absolute h-full w-full rounded-tr-[10px]"
-                    layout="fill"
-                    objectFit="cover"
-                  />
-                </div>
-              </div>
-              <div className="flex items-center justify-between space-x-5">
-                <div className="relative h-[15.688rem] w-1/2">
-                  <Image
-                    src={
-                      hotelData.image_4
-                        ? `${baseUrl}${hotelData.image_4}`
-                        : "/home4.jpg"
-                    }
-                    alt={`${hotelData.hotel_name} image 4`}
-                    className="absolute w-full h-full"
-                    layout="fill"
-                    objectFit="cover"
-                  />
-                </div>
-                <div className="relative h-[15.688rem] w-1/2">
-                  <Image
-                    src={
-                      hotelData.image_5
-                        ? `${baseUrl}${hotelData.image_5}`
-                        : "/home5.jpg"
-                    }
-                    alt={`${hotelData.hotel_name} image 5`}
-                    className="absolute h-full w-full rounded-br-[10px]"
-                    layout="fill"
-                    objectFit="cover"
-                  />
-                  <button 
-                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => setIsImageModalOpen(true)}
-                    className="flex justify-center items-center absolute bottom-0 left-1/2 transform -translate-x-1/3 -translate-y-1/2 mt-7 h-[2.375rem] w-[10rem] rounded-[10px] border border-black bg-white hover:bg-[#F7F7F7] text-sm font-medium text-black"
-                  >
-                    <TbGridDots className="w-4 h-4 mr-2" />
-                    Show all Photos
-                  </button>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
+
         <div className="mt-8 font-sora">
           <div className="flex flex-col xl:flex-row xl:items-start xl:justify-between w-full mt-4">
-            <div className="w-full xl:w-2/3 ">
-              <div className="w-11/12">
-                <h1 className="mb-4 text-lg font-bold text-gray-800">
-                  Hotel Description
-                </h1>
+            {/* Hotel Description */}
+            <div className="w-full xl:w-2/3 mr-4">
+              <h2 className="mb-4 text-lg font-bold text-gray-800">
+                Hotel Description
+              </h2>
+              <p className="text-sm text-justify leading-6 text-gray-600">
+                {hotelData.description}
+              </p>
 
-                <p className="text-sm  text-justify font-normal leading-6 text-gray-600 ">
-                  {hotelData?.description}
-                </p>
-                <div className="mt-6">
-                  <h2 className="text-lg font-bold mb-3">Facilities</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    {hotelData.facilities.map((facility) => (
-                      <div
-                        key={facility.facility}
-                        className="flex items-center space-x-2"
-                      >
-                        <span>{facility.facility}</span>
-                      </div>
-                    ))}
-                  </div>
+              <div className="mt-6">
+                <h3 className="text-lg font-bold mb-3">Facilities</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {hotelData.facilities.map((facility) => (
+                    <div
+                      key={facility.facility}
+                      className="flex items-center space-x-2"
+                    >
+                      <span>{facility.facility}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-            <div className="sticky top-5 mt-6 xl:mt-0 flex flex-col w-full xl:w-1/3 bg-white  rounded-md border-black drop-shadow-xl ">
-              <div className="self-end p-6 border border-gray-200 rounded-lg w-full">
-                {/* <div>
-                  <h2 className="text-lg font-semibold mb-4">Available Rooms</h2>
-                  {hotelData.room_types.map((room) => (
-                    <div key={room.room_type} className="mb-4 p-4 border rounded-lg">
-                      <h3 className="font-medium">{room.room_type}</h3>
-                      <p className="text-primary font-semibold">₦{room.base_price.toLocaleString()} / night</p>
-                    </div>
-                  ))}
-                </div> */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center justify-center space-x-1 text-[#031C43]">
-                    {/* <h1 className="text-sm font-normal">₦ 150,000 / night</h1> */}
-                  </div>
-                  {/* <div className="flex items-center space-x-2">
-                      <GiRoundStar className="w-4 h-4 text-primary" />
-                      <h1 className="text-sm font-medium text-black">
-                        5.0{" "}
-                      </h1>
-                      <div className="w-1 h-1 rounded-full bg-secondary"></div>
-                      <h1 className="text-sm font-medium text-black text-opacity-60">
-                        50 reviews
-                      </h1>
-                    </div> */}
-                </div>
 
-                {/* Guest Number Selection */}
+            {/* Booking Section */}
+            <div className="sticky top-5 mt-6 xl:mt-0 w-full xl:w-1/3 bg-white border border-gray-200 rounded-lg p-6 drop-shadow-lg">
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold">Book Your Stay</h3>
                 <div className="mt-5">
                   <div className="flex items-center justify-center w-full border border-gray-200 rounded-md">
                     <div className="relative w-full" ref={dropdownRef}>
@@ -609,17 +547,14 @@ const HotelDetails = () => {
             </div>
           </div>
         </div>
-        {/* <LoginModal 
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        onSuccess={handleLoginSuccess}
-      />      */}
+
+        {/* Image Modal */}
+        <ImageModal
+          images={getAllImages()}
+          isOpen={isImageModalOpen}
+          onClose={() => setIsImageModalOpen(false)}
+        />
       </div>
-      <ImageModal 
-  images={getAllImages()}
-  isOpen={isImageModalOpen}
-  onClose={() => setIsImageModalOpen(false)}
-/>
     </div>
   );
 };
