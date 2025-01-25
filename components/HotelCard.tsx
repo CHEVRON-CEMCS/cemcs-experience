@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 interface HotelBooking {
   name: string;
   hotel_name: string;
-  logo?: string; 
+  logo?: string;
 }
 
 export function HotelCard({ booking }: { booking: HotelBooking }) {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import axios from 'axios';
+import axios from "axios";
 
 interface Slide {
   name: string;
@@ -21,23 +21,27 @@ export function ShoppingImageSlider() {
   const [error, setError] = useState<string | null>(null);
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const thumbnailsRef = useRef<HTMLDivElement>(null);
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://staging.chevroncemcs.com';
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
 
   useEffect(() => {
     const fetchCarouselData = async () => {
       try {
-        const carouselResponse = await axios.get('/api/Carousel');
-        // Find the carousel with name "Shopping"
+        const carouselResponse = await axios.get("/api/Carousel");
         const shoppingCarousel = carouselResponse.data.data.find(
           (carousel: { name: string }) => carousel.name === "CR-02283"
         );
-        
+
         if (shoppingCarousel) {
-          const detailsResponse = await axios.get(`/api/Carousel/${shoppingCarousel.name}`);
+          const detailsResponse = await axios.get(
+            `/api/Carousel/${shoppingCarousel.name}`
+          );
           setSlides(detailsResponse.data.data.slides);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch carousel data');
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch carousel data"
+        );
       } finally {
         setLoading(false);
       }
@@ -79,28 +83,38 @@ export function ShoppingImageSlider() {
       const scrollPosition = mainImageIndex * 104;
       thumbnailsRef.current.scrollTo({
         left: scrollPosition,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }
   }, [mainImageIndex]);
 
   if (loading) {
-    return <div className="w-full h-[380px] bg-gray-200 animate-pulse rounded-lg" />;
+    return (
+      <div className="w-full h-[380px] md:h-[420px] bg-gray-200 animate-pulse rounded-lg" />
+    );
   }
 
   if (error) {
-    return <div className="w-full h-[380px] flex items-center justify-center">Error loading carousel: {error}</div>;
+    return (
+      <div className="w-full h-[380px] md:h-[420px] flex items-center justify-center">
+        Error loading carousel: {error}
+      </div>
+    );
   }
 
   if (slides.length === 0) {
-    return <div className="w-full h-[380px] flex items-center justify-center">No slides available</div>;
+    return (
+      <div className="w-full h-[380px] md:h-[420px] flex items-center justify-center">
+        No slides available
+      </div>
+    );
   }
 
   return (
-    <div className="w-full grid gap-6 md:gap-3 items-start">
-      <div className="relative w-full overflow-hidden rounded-lg aspect-[3/1]">
-                  <div 
-          className="flex transition-transform duration-500 ease-in-out" 
+    <div className="w-full grid gap-4 md:gap-6 items-start">
+      <div className="relative w-full overflow-hidden rounded-lg aspect-[3/2] md:aspect-[3/1]">
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${mainImageIndex * 100}%)` }}
         >
           {slides.map((slide, index) => (
@@ -111,39 +125,39 @@ export function ShoppingImageSlider() {
                 width={1280}
                 height={427}
                 priority={index === 0}
-                className="object-cover w-full h-[420px]"
+                className="object-cover w-full h-[250px] md:h-[420px]"
               />
               <div className="absolute inset-0 bg-black/10" />
             </div>
           ))}
         </div>
 
-        <div className="absolute inset-0 flex items-center justify-between px-4">
-          <Button 
-            onClick={handlePreviousClick} 
-            variant="ghost" 
+        <div className="absolute inset-0 flex items-center justify-between px-2 md:px-4">
+          <Button
+            onClick={handlePreviousClick}
+            variant="ghost"
             size="icon"
             className="bg-white/80 hover:bg-white/90"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-4 h-4 md:w-6 md:h-6" />
           </Button>
-          <Button 
-            onClick={handleNextClick} 
-            variant="ghost" 
+          <Button
+            onClick={handleNextClick}
+            variant="ghost"
             size="icon"
             className="bg-white/80 hover:bg-white/90"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-4 h-4 md:w-6 md:h-6" />
           </Button>
         </div>
       </div>
 
       {slides.length > 1 && (
         <div className="relative">
-          <div 
+          <div
             ref={thumbnailsRef}
-            className="flex gap-4 overflow-x-auto scrollbar-hide"
-            style={{ scrollBehavior: 'smooth' }}
+            className="flex gap-2 md:gap-4 overflow-x-auto scrollbar-hide"
+            style={{ scrollBehavior: "smooth" }}
           >
             {slides.map((slide, index) => (
               <div
@@ -155,7 +169,7 @@ export function ShoppingImageSlider() {
                 key={slide.name}
                 onClick={() => handleImageClick(index)}
               >
-                <div className="relative w-[100px] h-[100px]">
+                <div className="relative w-[80px] h-[80px] md:w-[100px] md:h-[100px]">
                   <Image
                     src={`${baseUrl}${slide.image}`}
                     alt={slide.heading}
