@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Car, Home, Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/router";
+import { InsuranceImageSlider } from "./InsuranceImageSlider";
 
 interface PageStore {
   currentPage: string;
@@ -88,9 +89,13 @@ const HomePage = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="">
+      <div className=" ">
+        <InsuranceImageSlider />
+      </div>
+
       {/* Hero Section */}
-      <div className="relative h-64 bg-gradient-to-r from-blue-600 to-blue-400 rounded-lg overflow-hidden">
+      {/* <div className="relative h-64 bg-gradient-to-r from-blue-600 to-blue-400 rounded-lg overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center text-white p-6">
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-4">
@@ -101,7 +106,7 @@ const HomePage = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Insurance Types Slider */}
       <div className="relative">

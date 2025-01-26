@@ -44,7 +44,7 @@ const insurance = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Link href="/">
-                <h1 className="text-black font-bold text-xl lg:text-3xl">
+                <h1 className="text-black font-bold text-2xl lg:text-4xl">
                   CEMCS<span className="text-blue-500">Insurance</span>
                 </h1>
               </Link>
@@ -55,20 +55,20 @@ const insurance = () => {
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon">
-                    <Menu className="h-6 w-6" />
+                    <Menu className="h-8 w-8" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent>
                   <SheetHeader>
-                    <SheetTitle>Menu</SheetTitle>
+                    <SheetTitle className="text-xl">Menu</SheetTitle>
                   </SheetHeader>
-                  <div className="mt-4 flex flex-col space-y-2">
+                  <div className="mt-4 flex flex-col space-y-4">
                     {pages.map((page) => (
                       <Button
                         key={page.id}
                         variant={currentPage === page.id ? "default" : "ghost"}
                         onClick={() => setCurrentPage(page.id)}
-                        className="w-full justify-start"
+                        className="w-full justify-start text-lg"
                       >
                         {page.title}
                       </Button>
@@ -79,12 +79,13 @@ const insurance = () => {
             </div>
 
             {/* Desktop menu */}
-            <nav className="hidden md:flex space-x-4">
+            <nav className="hidden md:flex space-x-6">
               {pages.map((page) => (
                 <Button
                   key={page.id}
                   variant={currentPage === page.id ? "default" : "ghost"}
                   onClick={() => setCurrentPage(page.id)}
+                  className="text-lg"
                 >
                   {page.title}
                 </Button>
@@ -95,20 +96,24 @@ const insurance = () => {
       </header>
 
       {/* Main content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Card className="p-6">
+      <main className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <Card className="p-8">
           {currentPage === "home" && (
             <div>
               <HomePage />
             </div>
           )}
-          {currentPage === "policies" && <div>Policies Page Content</div>}
+          {currentPage === "policies" && (
+            <div className="text-lg">Policies Page Content</div>
+          )}
           {currentPage === "claims" && (
             <div>
               <ClaimsPage />
             </div>
           )}
-          {currentPage === "profile" && <div>Profile Page Content</div>}
+          {currentPage === "profile" && (
+            <div className="text-lg">Profile Page Content</div>
+          )}
         </Card>
       </main>
     </div>

@@ -89,6 +89,17 @@ const InsuranceForm = () => {
                   />
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor="email">Phone Number</Label>
+                  <Input
+                    id="phone_number"
+                    type="tel"
+                    pattern="[0-9]*"
+                    inputMode="numeric"
+                    placeholder="Enter your phone number"
+                    className="w-full"
+                  />
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
                   <Input
                     id="email"
