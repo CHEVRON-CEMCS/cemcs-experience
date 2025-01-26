@@ -121,7 +121,7 @@ export function InsuranceImageSlider() {
                 width={1280}
                 height={427}
                 priority={index === 0}
-                className="object-cover w-full h-[400px]"
+                className="object-cover w-full h-[410px]"
               />
               <div className="absolute inset-0 bg-black/10" />
             </div>
