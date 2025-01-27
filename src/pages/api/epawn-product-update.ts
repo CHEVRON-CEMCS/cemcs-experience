@@ -1,8 +1,7 @@
-// pages/api/epawn-bid-status-update.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 
-export default async function handler(
+export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -11,17 +10,16 @@ export default async function handler(
   }
 
   try {
-    const { bidId, newStatus, product, previous_status, subscriber_id } =
-      req.body;
+    const { product_id, newStatus } = req.body;
 
-    const statusUpdateData = {
-      doctype: "Epawn Biddings",
+    const productStatusUpdateData = {
+      doctype: "Epawn Products",
       status: newStatus,
     };
 
-    const response = await axios.put(
-      `https://staging.chevroncemcs.com/api/resource/Epawn Biddings/${bidId}`,
-      statusUpdateData,
+    const responseProduct = await axios.put(
+      `https://staging.chevroncemcs.com/api/resource/Epawn Products/${product_id}`,
+      productStatusUpdateData,
       {
         auth: {
           username: "d5ea6c1a0aaeb82",
@@ -30,11 +28,11 @@ export default async function handler(
       }
     );
 
-    return res.status(200).json(response.data);
+    return res.status(200).json(responseProduct.data);
   } catch (error: any) {
     console.error("Error updating bid status:", error.response?.data || error);
     return res.status(500).json({
-      message: "Failed to update bid status",
+      message: "Failed to product status",
       error: error.response?.data || error.message,
     });
   }

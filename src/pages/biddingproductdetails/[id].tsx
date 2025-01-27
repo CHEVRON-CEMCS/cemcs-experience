@@ -26,51 +26,51 @@ import { useAuthStore } from "../../../store/authStore";
 import BidHistoryTable from "../../../components/BidHistoryTable";
 
 interface Bid {
+  name: string;
+  name1: string;
+  price: number;
+  email: string;
+  phone: string;
+  status: string;
+  creation: string;
+  product: string;
+  member_id: string;
+  doctype: string;
+}
+
+interface Product {
+  name: string;
+  product_name: string;
+  price: number;
+  image: string;
+  status: string;
+  description: string;
+  owner_name: string;
+  subscriber_id: string;
+
+  member_id: string;
+}
+
+interface UpdateStatusRequest {
+  bidId: string;
+  newStatus: string;
+  product: string;
+  updated_by: string;
+}
+
+interface UpdateStatusResponse {
+  data: {
     name: string;
-    name1: string;
-    price: number;
-    email: string;
-    phone: string;
-    status: string;
-    creation: string;  
+    bid_id: string;
+    new_status: string;
     product: string;
-    member_id: string;
-    doctype: string;
-  }
-
-  interface Product {
-    name: string;
-    product_name: string;
-    price: number;
-    image: string;
-    status: string;
-    description: string;
-    owner_name: string;
-    subscriber_id: string;  
-
-    member_id: string;  
-  }
-
-  interface UpdateStatusRequest {
-    bidId: string;
-    newStatus: string;
-    product: string;
-    updated_by: string;
-  }
-  
-  interface UpdateStatusResponse {
-    data: {
-      name: string;
-      bid_id: string;
-      new_status: string;
-      product: string;
-      creation: string;
-    };
-  }
+    creation: string;
+  };
+}
 
 const BiddingProductDetails: React.FC = () => {
   const router = useRouter();
-  const { memberDetails } = useAuthStore();
+  const { memberDetails, loginUser } = useAuthStore();
 
   const { id } = router.query;
   const [product, setProduct] = useState<Product | null>(null);
@@ -82,43 +82,56 @@ const BiddingProductDetails: React.FC = () => {
   const [bidderPhone, setBidderPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [status, setStatus] = useState<string>("");
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
 
   interface UpdateStatusResponse {
     data: {
       status: string;
-
     };
   }
-  
-  const handleStatusUpdate = async (bidId: string, newStatus: string): Promise<UpdateStatusResponse> => {
+
+  const handleStatusUpdate = async (
+    bidId: string,
+    newStatus: string
+  ): Promise<UpdateStatusResponse> => {
     try {
-      console.log('Updating status:', {
+      console.log("Updating status:", {
         bidId,
         newStatus,
         subscriber_id: memberDetails?.membership_number,
       });
-  
-      
-      const currentBid = bids.find(bid => bid.name === bidId);
-      if (!currentBid) throw new Error('Bid not found');
-  
-      const response = await axios.post('/api/epawn-bid-status-update', {
+
+      const currentBid = bids.find((bid) => bid.name === bidId);
+      if (!currentBid) throw new Error("Bid not found");
+
+      const response = await axios.put(`/api/epawn-bid-status-update`, {
         bidId,
         newStatus,
         product: product?.name,
         previous_status: currentBid.status,
-        subscriber_id: memberDetails?.membership_number
+        subscriber_id: memberDetails?.membership_number,
       });
-  
+
+      const productUpdate = await axios.put("/api/epawn-product-update", {
+        product_id: product?.name,
+        newStatus,
+      });
+
+      setStatus(productUpdate.data.data.status);
+      console.log(productUpdate.data.data.status);
+
       // Refresh bids after update
-      const bidsRes = await axios.get(`/api/Epawn Biddings?product_id=${product?.name}`);
+      const bidsRes = await axios.get(
+        `/api/Epawn Biddings?product_id=${product?.name}`
+      );
       setBids(bidsRes.data.data || []);
-  
+
       return response.data;
     } catch (error) {
-      console.error('Error updating bid status:', error);
+      console.error("Error updating bid status:", error);
       throw error;
     }
   };
@@ -126,28 +139,27 @@ const BiddingProductDetails: React.FC = () => {
   useEffect(() => {
     const fetchProductAndBids = async () => {
       if (!id) return;
-  
+
       try {
         const [productRes, bidsRes] = await Promise.all([
           axios.get(`/api/Epawn Products?id=${id}`),
-          axios.get(`/api/Epawn Biddings?product_id=${id}`)
+          axios.get(`/api/Epawn Biddings?product_id=${id}`),
         ]);
-  
-        console.log('Product response:', productRes.data.data); 
+
+        console.log("Product response:", productRes.data.data);
+        setStatus(productRes.data.data.status);
         setProduct(productRes.data.data);
         setBids(bidsRes.data.data || []);
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
         toast.error("Failed to load product details");
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchProductAndBids();
   }, [id]);
-
-  
 
   interface BidRequestData {
     doctype: string;
@@ -159,7 +171,7 @@ const BiddingProductDetails: React.FC = () => {
     product: string;
     member_id: string;
   }
-  
+
   interface BidResponseData {
     data: {
       name: string;
@@ -180,57 +192,67 @@ const BiddingProductDetails: React.FC = () => {
     };
   }
 
-  
-  
   const handleBidSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
+
+    if (!memberDetails?.membership_number) {
+      router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
+      return;
+    }
+    if (!loginUser?.email) {
+      router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
+      return;
+    }
     try {
       if (!product || !memberDetails) {
         toast.error("Missing product or member details");
         return;
       }
-  
+
       // Validate bid amount
       const parsedBidAmount = parseFloat(bidAmount);
       if (isNaN(parsedBidAmount) || parsedBidAmount < product.price) {
-        toast.error("Bid amount must be greater than or equal to the starting price");
+        toast.error(
+          "Bid amount must be greater than or equal to the starting price"
+        );
         return;
       }
-  
+
       const bidData: BidRequestData = {
         doctype: "Epawn Biddings",
-        name1: bidderName,
+        name1: loginUser?.full_name,
         price: parsedBidAmount,
-        email: bidderEmail,
+        email: loginUser?.email,
         phone: bidderPhone,
         status: "0",
         product: product.name,
-        member_id: memberDetails.membership_number
+        member_id: memberDetails.membership_number,
       };
-  
+
       const response = await axios.post<BidResponseData>(
         "/api/epawn-biddings",
         bidData
       );
       console.log("Response:", response.data);
 
-  
       toast.success("Bid placed successfully!");
       setDialogOpen(false);
-      
+
       // Refresh bids
-      const bidsRes = await axios.get(`/api/Epawn Biddings?product_id=${product.name}`);
+      const bidsRes = await axios.get(
+        `/api/Epawn Biddings?product_id=${product.name}`
+      );
+      console.log("product endpoint:", bidsRes.data.data.status);
       setBids(bidsRes.data.data || []);
-      
+
       // Clear form
       setBidAmount("");
       setBidderName("");
       setBidderEmail("");
       setBidderPhone("");
     } catch (error: any) {
-      console.error('Error placing bid:', error);
+      console.error("Error placing bid:", error);
       toast.error(error.response?.data?.message || "Failed to place bid");
     } finally {
       setIsSubmitting(false);
@@ -262,19 +284,25 @@ const BiddingProductDetails: React.FC = () => {
   }
 
   const imageUrl = product.image?.startsWith("http")
-  ? product.image
-  : product.image
-  ? `${baseUrl}/${product.image}` 
-  : "/placeholder.jpg";
+    ? product.image
+    : product.image
+      ? `${baseUrl}/${product.image}`
+      : "/placeholder.jpg";
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "0": return "Open for Bidding";
-      case "1": return "Bid Accepted";
-      case "2": return "Closed";
-      default: return "Unknown";
+      case "0":
+        return "Open for Bidding";
+      case "1":
+        return "Bid Accepted";
+      case "2":
+        return "Closed";
+      default:
+        return "Unknown";
     }
   };
+
+  console.log(product);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -296,7 +324,9 @@ const BiddingProductDetails: React.FC = () => {
           <div className="space-y-6">
             <div>
               <h1 className="text-3xl font-bold">{product.product_name}</h1>
-              <p className="text-gray-600 mt-2">Posted by: {product.owner_name}</p>
+              <p className="text-gray-600 mt-2">
+                Posted by: {product.owner_name}
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -309,7 +339,7 @@ const BiddingProductDetails: React.FC = () => {
             <div className="space-y-2">
               <p className="text-lg font-semibold">Status:</p>
               <span className="inline-flex items-center rounded-md px-2 py-1 text-sm font-medium bg-yellow-100 text-yellow-800 ring-1 ring-inset ring-yellow-600/20">
-                {getStatusText(product.status)}
+                {getStatusText(status)}
               </span>
             </div>
 
@@ -332,13 +362,18 @@ const BiddingProductDetails: React.FC = () => {
                       <label className="text-sm font-medium">Your Name</label>
                       <Input
                         required
-                        value={bidderName}
+                        value={loginUser?.full_name}
                         onChange={(e) => setBidderName(e.target.value)}
-                        placeholder="Enter your name"
+                        placeholder={
+                          loginUser?.full_name || "Please enter your name"
+                        }
+                        readOnly
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium">Bid Amount (₦)</label>
+                      <label className="text-sm font-medium">
+                        Bid Amount (₦)
+                      </label>
                       <Input
                         required
                         type="number"
@@ -353,9 +388,10 @@ const BiddingProductDetails: React.FC = () => {
                       <Input
                         required
                         type="email"
-                        value={bidderEmail}
+                        value={loginUser?.email}
+                        readOnly
                         onChange={(e) => setBidderEmail(e.target.value)}
-                        placeholder="Enter your email"
+                        placeholder={loginUser?.email || "Enter your email"}
                       />
                     </div>
                     <div>
@@ -382,16 +418,18 @@ const BiddingProductDetails: React.FC = () => {
         </div>
 
         {/* Bids Table */}
-<div className="mt-12">
-  <h2 className="text-2xl font-bold mb-4">Bid History</h2>
-  
-  <BidHistoryTable 
-    bids={bids}
-    onUpdateStatus={handleStatusUpdate}
-    product={product}
-    isOwner={Boolean(memberDetails?.membership_number === product.member_id)}
-  />
-</div>
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold mb-4">Bid History</h2>
+
+          <BidHistoryTable
+            bids={bids}
+            onUpdateStatus={handleStatusUpdate}
+            product={product}
+            isOwner={Boolean(
+              memberDetails?.membership_number === product.member_id
+            )}
+          />
+        </div>
       </div>
       <Footer />
       <Toaster expand={true} richColors position="bottom-center" />

@@ -24,8 +24,9 @@ export const NavLanding: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { logout, isAuthenticated } = useAuthStore();
   console.log("is Authenticated:", isAuthenticated);
-  const { memberDetails } = useAuthStore();
+  const { memberDetails, loginUser } = useAuthStore();
   console.log("User Details:", memberDetails);
+  console.log("login User:", loginUser);
 
   const handleExternalLink = (url: string) => {
     if (url.startsWith("http")) {

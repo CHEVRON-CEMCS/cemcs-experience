@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from "../../components/Navbar";
-import { BiddingProductCard, LoadingBiddingProductCard } from "../../components/BiddingProductCard";
+import {
+  BiddingProductCard,
+  LoadingBiddingProductCard,
+} from "../../components/BiddingProductCard";
 import Footer from "../../components/Footer";
 import axios, { AxiosError } from "axios";
 import { Toaster, toast } from "sonner";
+import { useAuthStore } from "../../store/authStore";
 
 interface BiddingProduct {
   name: string;
@@ -18,26 +22,32 @@ interface BiddingProduct {
 }
 
 const BiddingProducts: React.FC = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
   const [products, setProducts] = useState<BiddingProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSubscriber, setIsSubscriber] = useState(false);
+
+  const { memberDetails } = useAuthStore();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("/api/Epawn Products");
-        
+
         // Process the products and handle image URLs
-        const productData = response.data.data.map((product: BiddingProduct) => ({
-          ...product,
-          image: product.image 
-            ? product.image.startsWith('http') 
-              ? product.image 
-              : `${baseUrl}/${product.image}`
-            : '/placeholder.jpg'
-        }));
-        
+        const productData = response.data.data.map(
+          (product: BiddingProduct) => ({
+            ...product,
+            image: product.image
+              ? product.image.startsWith("http")
+                ? product.image
+                : `${baseUrl}/${product.image}`
+              : "/placeholder.jpg",
+          })
+        );
+
         setProducts(productData);
       } catch (err) {
         const errorMessage =
@@ -54,30 +64,51 @@ const BiddingProducts: React.FC = () => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    const checkSubscriber = async () => {
+      if (!memberDetails?.membership_number) return;
+
+      try {
+        const response = await axios.get(
+          `/api/Epawn Subscriber?id=${memberDetails.membership_number}`
+        );
+        console.log(response.data);
+        setIsSubscriber(!!response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkSubscriber();
+  }, [memberDetails?.membership_number]);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow mt-8 w-full">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl sm:text-3xl font-bold">Products for Bidding</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            Products for Bidding
+          </h1>
           <div className="flex space-x-5">
             <button
-                onClick={() => window.location.href = '/subscriber'}
-                className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+              onClick={() => (window.location.href = "/subscriber")}
+              className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
             >
-                Become a Seller
+              Become a Subscriber
             </button>
 
-            <button
-                onClick={() => window.location.href = '/epawnupload'}
+            {isSubscriber && (
+              <button
+                onClick={() => (window.location.href = "/epawnupload")}
                 className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
-            >
+              >
                 Add Product
-            </button>
-
+              </button>
+            )}
           </div>
         </div>
-        
+
         <div className="w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-8 mb-10">
           {loading ? (
             <>
