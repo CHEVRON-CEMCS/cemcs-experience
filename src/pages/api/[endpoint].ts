@@ -5,7 +5,6 @@ import axios from 'axios'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { endpoint = '', category, sub_category, featured, search, id, product_id } = req.query
   
-  // Ensure endpoint is a string
   const endpointStr = Array.isArray(endpoint) ? endpoint[0] : endpoint
   
   const fields = {
@@ -21,7 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }[endpointStr] || '["name"]'
   
   try {
-    // Handle specific product fetch if ID is provided
     if (id && endpointStr === 'Epawn Products') {
       const productUrl = `https://staging.chevroncemcs.com/api/resource/${endpointStr}/${id}`
       const response = await axios.get(productUrl, {

@@ -32,7 +32,7 @@ interface Bid {
     email: string;
     phone: string;
     status: string;
-    creation: string;  // Changed from created_at to creation
+    creation: string;  
     product: string;
     member_id: string;
     doctype: string;
@@ -46,9 +46,9 @@ interface Bid {
     status: string;
     description: string;
     owner_name: string;
-    subscriber_id: string;  // Add this back
+    subscriber_id: string;  
 
-    member_id: string;  // Changed from subscriber_id
+    member_id: string;  
   }
 
   interface UpdateStatusRequest {
@@ -88,7 +88,7 @@ const BiddingProductDetails: React.FC = () => {
   interface UpdateStatusResponse {
     data: {
       status: string;
-      // Add other response fields as needed
+
     };
   }
   
@@ -100,7 +100,7 @@ const BiddingProductDetails: React.FC = () => {
         subscriber_id: memberDetails?.membership_number,
       });
   
-      // Get current bid
+      
       const currentBid = bids.find(bid => bid.name === bidId);
       if (!currentBid) throw new Error('Bid not found');
   
@@ -133,7 +133,7 @@ const BiddingProductDetails: React.FC = () => {
           axios.get(`/api/Epawn Biddings?product_id=${id}`)
         ]);
   
-        console.log('Product response:', productRes.data.data); // Add this to see the actual field names
+        console.log('Product response:', productRes.data.data); 
         setProduct(productRes.data.data);
         setBids(bidsRes.data.data || []);
       } catch (error) {
@@ -264,7 +264,7 @@ const BiddingProductDetails: React.FC = () => {
   const imageUrl = product.image?.startsWith("http")
   ? product.image
   : product.image
-  ? `${baseUrl}/${product.image}` // Add the forward slash here
+  ? `${baseUrl}/${product.image}` 
   : "/placeholder.jpg";
 
   const getStatusText = (status: string) => {

@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const productData = {
       doctype: "Epawn Products",
       ...req.body,
-      status: "0" // Default to open for bidding
+      status: "0" 
     };
 
     const response = await axios.post(

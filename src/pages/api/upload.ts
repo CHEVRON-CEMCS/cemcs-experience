@@ -25,10 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    // Read the file
     const fileData = fs.readFileSync(file.filepath);
 
-    // Create Node.js FormData (not browser FormData)
     const formData = new FormData();
     formData.append('file', fileData, {
       filename: file.originalFilename || 'file',
@@ -38,7 +36,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     formData.append('docname', 'payment_receipt');
     formData.append('is_private', '0');
 
-    // Upload to Frappe
     const response = await axios.post(
       'https://staging.chevroncemcs.com/api/method/upload_file',
       formData,
@@ -48,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           password: '0476216f7e4e8ca'
         },
         headers: {
-          ...formData.getHeaders() // This works with Node.js FormData
+          ...formData.getHeaders()
         },
       }
     );
