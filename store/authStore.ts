@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import axios, { AxiosError } from 'axios';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import axios, { AxiosError } from "axios";
 
 interface LoginUser {
   full_name: string;
@@ -47,10 +47,10 @@ export const useAuthStore = create(
         set({ isLoading: true, error: null });
         try {
           // First, perform login
-          const loginResponse = await axios.post('/api/auth/login', { 
-            usr: email, 
+          const loginResponse = await axios.post("/api/auth/login", {
+            usr: email,
             pwd: password,
-            baseUrl: baseUrl
+            baseUrl: baseUrl,
           });
 
           // Set initial login state
@@ -60,34 +60,40 @@ export const useAuthStore = create(
               home_page: loginResponse.data.home_page,
               email: email,
               baseUrl: baseUrl,
-              userType: baseUrl.split('.')[0]
+              userType: baseUrl.split(".")[0],
             },
             isAuthenticated: true,
           });
 
           // Add a small delay to ensure session is established
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
 
           // Then try to fetch member data if needed
           try {
-            const memberListResponse = await axios.get('/api/member', {
+            const memberListResponse = await axios.get("/api/member", {
               headers: {
-                'X-Base-URL': baseUrl
-              }
+                "X-Base-URL": baseUrl,
+              },
             });
 
-            if (memberListResponse.data.data && memberListResponse.data.data.length > 0) {
+            if (
+              memberListResponse.data.data &&
+              memberListResponse.data.data.length > 0
+            ) {
               const memberId = memberListResponse.data.data[0].name;
 
-              const memberDetailsResponse = await axios.get(`/api/member/${memberId}`, {
-                headers: {
-                  'X-Base-URL': baseUrl
+              const memberDetailsResponse = await axios.get(
+                `/api/member/${memberId}`,
+                {
+                  headers: {
+                    "X-Base-URL": baseUrl,
+                  },
                 }
-              });
-              
+              );
+
               const memberData = memberDetailsResponse.data.data;
-              
-              set({ 
+
+              set({
                 memberDetails: {
                   membership_number: memberData.membership_number,
                   member_name: memberData.member_name,
@@ -95,7 +101,7 @@ export const useAuthStore = create(
               });
             }
           } catch (memberError) {
-            console.error('Failed to fetch member details:', memberError);
+            console.error("Failed to fetch member details:", memberError);
             // Don't throw here - we still want to consider the login successful
           }
 
@@ -103,23 +109,23 @@ export const useAuthStore = create(
         } catch (error) {
           if (axios.isAxiosError(error) && error.response?.data?.message) {
             // Directly use the message from the Frappe response
-            set({ 
+            set({
               error: error.response.data.message,
               isLoading: false,
               isAuthenticated: false,
               loginUser: null,
-              memberDetails: null
+              memberDetails: null,
             });
             throw new Error(error.response.data.message);
           } else {
             // Fallback error message if the expected structure isn't found
             const errorMessage = "Failed to login";
-            set({ 
+            set({
               error: errorMessage,
               isLoading: false,
               isAuthenticated: false,
               loginUser: null,
-              memberDetails: null
+              memberDetails: null,
             });
             throw new Error(errorMessage);
           }
@@ -127,16 +133,16 @@ export const useAuthStore = create(
       },
 
       logout: () => {
-        set({ 
+        set({
           loginUser: null,
           memberDetails: null,
           isAuthenticated: false,
-          error: null 
+          error: null,
         });
-      }
+      },
     }),
     {
-      name: 'auth-storage'
+      name: "auth-storage",
     }
   )
 );
