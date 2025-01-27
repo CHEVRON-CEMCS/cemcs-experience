@@ -10,11 +10,11 @@ export const navbarLinks = [
     name: "Home",
     href: "/shop",
   },
-  // {
-  //   id: 1,
-  //   name: "Bookings",
-  //   href: "/bookings",
-  // },
+  {
+    id: 1,
+    name: "E-pawn",
+    href: "/biddingproducts",
+  },
   // {
   //   id: 2,
   //   name: "Men",

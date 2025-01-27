@@ -3,7 +3,10 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { endpoint, category, sub_category, featured, search } = req.query
+  const { endpoint = '', category, sub_category, featured, search, id, product_id } = req.query
+  
+  // Ensure endpoint is a string
+  const endpointStr = Array.isArray(endpoint) ? endpoint[0] : endpoint
   
   const fields = {
     'Hotel': '["name","hotel_name"]',
@@ -12,16 +15,53 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     'Tour Booking': '["name","customer"]',
     'Tour Package': '["name","package_name"]',
     'Experience Blog': '["name","title","featured_image","publish_date","status"]',
-    'Carousel': '["name","carousel_name","slides"]'
-  }[endpoint as string] || '["name"]'
+    'Carousel': '["name","carousel_name","slides"]',
+    'Epawn Products': '["name","product_name","price","image","status","description","owner_name","subscriber_id","member_id"]',
+    'Epawn Biddings': '["name","name1","price","email","phone","status","creation","product","member_id"]'
+  }[endpointStr] || '["name"]'
   
   try {
+    // Handle specific product fetch if ID is provided
+    if (id && endpointStr === 'Epawn Products') {
+      const productUrl = `https://staging.chevroncemcs.com/api/resource/${endpointStr}/${id}`
+      const response = await axios.get(productUrl, {
+        auth: {
+          username: 'd5ea6c1a0aaeb82',
+          password: '0476216f7e4e8ca'
+        }
+      })
+      return res.status(200).json({ data: response.data.data })
+    }
+
+    // Handle Epawn Biddings with product_id filter
+    if (endpointStr === 'Epawn Biddings' && product_id) {
+      const url = `https://staging.chevroncemcs.com/api/resource/${endpointStr}`;
+      const response = await axios.get(url, {
+        auth: {
+          username: 'd5ea6c1a0aaeb82',
+          password: '0476216f7e4e8ca'
+        },
+        params: {
+          fields: fields,
+          filters: JSON.stringify([["product", "=", product_id]])
+        }
+      });
+
+      let biddingData = [];
+      if (response.data && response.data.data) {
+        biddingData = Array.isArray(response.data.data) 
+          ? response.data.data 
+          : [response.data.data];
+      }
+      return res.status(200).json({ data: biddingData });
+    }
+
     let url = `https://staging.chevroncemcs.com/api/resource/${endpoint}?fields=${fields}&limit_page_length=10000`
     
     let filters = []
     
-    // Only add status filter for Products
-    if (endpoint === 'Product') {
+    // Handle status filters for different product types
+    if (endpointStr === 'Product') {
       filters.push(["status", "=", "Active"])
     }
 
