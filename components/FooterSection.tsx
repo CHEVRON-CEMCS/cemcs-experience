@@ -6,13 +6,14 @@ const footerLinks = {
   services: [
     { id: 1, name: "E-commerce Store", url: "/shop" },
     { id: 2, name: "Travels", url: "/reservations" },
+    { id: 3, name: "Insurance", url: "/insurance" },
     {
-      id: 3,
+      id: 4,
       name: "Retiree Platform",
       url: "https://portal.chevroncemcs.com/#login",
     },
     {
-      id: 4,
+      id: 5,
       name: "Member Platform",
       url: "https://member.chevroncemcs.com/login",
     },
