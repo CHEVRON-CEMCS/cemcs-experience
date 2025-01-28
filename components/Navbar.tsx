@@ -17,6 +17,20 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
+import { useAuthStore } from "../store/authStore";
 
 interface SearchResult {
  name: string;
@@ -34,6 +48,10 @@ export function Navbar() {
  const [showResults, setShowResults] = useState(false);
  const searchContainerRef = useRef<HTMLDivElement>(null);
  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://staging.chevroncemcs.com';
+ const [isSubscriber, setIsSubscriber] = useState(false);
+ const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+ const { memberDetails } = useAuthStore();
 
  const { items, totalItems, removeItem, increaseQuantity, decreaseQuantity } = useCartStore();
 
@@ -80,6 +98,24 @@ export function Navbar() {
    }
  };
 
+ useEffect(() => {
+  const checkSubscriber = async () => {
+    if (!memberDetails?.membership_number) return;
+
+    try {
+      const response = await axios.get(
+        `/api/Epawn Subscriber?id=${memberDetails.membership_number}`
+      );
+      console.log(response.data);
+      setIsSubscriber(!!response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  checkSubscriber();
+}, [memberDetails?.membership_number]);
+
  return (
    <nav className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
      <div className="flex items-center">
@@ -91,8 +127,8 @@ export function Navbar() {
        <NavbarLinks />
      </div>
 
-     <div className="w-1/3 relative" ref={searchContainerRef}>
-       <form onSubmit={handleSearch} className="relative">
+     <div className="hidden md:block w-1/3 relative" ref={searchContainerRef}>
+     <form onSubmit={handleSearch} className="relative">
          <Input 
            className="w-full pr-10" 
            placeholder="Search for product..." 
@@ -301,6 +337,38 @@ export function Navbar() {
            </SheetContent>
          </Sheet>
        </div>
+
+      {isSubscriber && (
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" alt="profile" />
+                  <AvatarFallback>
+                    {memberDetails?.member_name
+                      ? memberDetails.member_name
+                          .split(' ')
+                          .map(name => name.charAt(0))
+                          .join('')
+                          .toUpperCase()
+                          .slice(0, 2)
+                      : 'NA'}
+                  </AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href="/epawnsubscriberprofile">Subscriber Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href='/myepawnproducts'>My Epawn products</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+       )}
      </div>
    </nav>
  );

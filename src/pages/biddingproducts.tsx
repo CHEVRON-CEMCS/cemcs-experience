@@ -8,6 +8,9 @@ import Footer from "../../components/Footer";
 import axios, { AxiosError } from "axios";
 import { Toaster, toast } from "sonner";
 import { useAuthStore } from "../../store/authStore";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
 
 interface BiddingProduct {
   name: string;
@@ -99,12 +102,12 @@ const BiddingProducts: React.FC = () => {
             </button>
 
             {isSubscriber && (
-              <button
-                onClick={() => (window.location.href = "/epawnupload")}
-                className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
-              >
-                Add Product
-              </button>
+              <Link href="/epawnupload">
+              <Button className="flex items-center gap-2">
+                <PlusIcon className="w-4 h-4" />
+                Add New Product
+              </Button>
+            </Link>
             )}
           </div>
         </div>

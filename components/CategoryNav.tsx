@@ -88,6 +88,14 @@ export function CategoryNav() {
         <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} border-t`}>
           <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex flex-col space-y-4">
+              {/* E-pawn Link for Mobile */}
+              <Link
+                href="/biddingproducts"
+                className="text-gray-600 hover:text-gray-900 py-2"
+              >
+                E-pawn
+              </Link>
+              {/* Regular Categories */}
               {Object.entries(categoryData).map(([category, subcategories]) => (
                 <CategoryItem key={category} category={category} subcategories={subcategories} />
               ))}
@@ -100,6 +108,16 @@ export function CategoryNav() {
       <div className="hidden md:block">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex flex-wrap gap-8">
+            {/* E-pawn Link for Desktop */}
+            <div className="py-2">
+              <Link
+                href="/biddingproducts"
+                className="font-medium text-gray-600 hover:text-gray-900"
+              >
+                E-pawn
+              </Link>
+            </div>
+            {/* Regular Categories */}
             {Object.entries(categoryData).map(([category, subcategories]) => (
               <div key={category} className="relative group py-2">
                 <div className="flex items-center space-x-1 cursor-pointer text-gray-600 group-hover:text-gray-900">
