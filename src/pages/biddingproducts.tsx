@@ -78,7 +78,7 @@ const BiddingProducts: React.FC = () => {
         console.log(response.data);
         setIsSubscriber(!!response.data);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     };
 
@@ -103,11 +103,11 @@ const BiddingProducts: React.FC = () => {
 
             {isSubscriber && (
               <Link href="/epawnupload">
-              <Button className="flex items-center gap-2">
-                <PlusIcon className="w-4 h-4" />
-                Add New Product
-              </Button>
-            </Link>
+                <Button className="flex items-center gap-2">
+                  <PlusIcon className="w-4 h-4" />
+                  Add New Product
+                </Button>
+              </Link>
             )}
           </div>
         </div>
@@ -121,7 +121,7 @@ const BiddingProducts: React.FC = () => {
             </>
           ) : error ? (
             <div className="col-span-full text-center text-red-500">
-              Error loading products: {error}
+              Error loading products
             </div>
           ) : products.length === 0 ? (
             <div className="col-span-full text-center text-gray-500">

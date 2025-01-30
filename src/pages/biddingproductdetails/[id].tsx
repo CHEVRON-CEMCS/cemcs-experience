@@ -211,19 +211,19 @@ const BiddingProductDetails: React.FC = () => {
       }
 
       // Validate bid amount
-      const parsedBidAmount = parseFloat(bidAmount);
-      if (isNaN(parsedBidAmount) || parsedBidAmount < product.price) {
-        toast.error(
-          "Bid amount must be greater than or equal to the starting price"
-        );
-        return;
-      }
+      // const parsedBidAmount = parseFloat(bidAmount);
+      // if (isNaN(parsedBidAmount) || parsedBidAmount < product.price) {
+      //   toast.error(
+      //     "Bid amount must be greater than or equal to the starting price"
+      //   );
+      //   return;
+      // }
 
       const bidData: BidRequestData = {
         doctype: "Epawn Biddings",
         name1: loginUser?.full_name,
-        price: parsedBidAmount,
-        email: loginUser?.email,
+        price: parseFloat(bidAmount),
+        email: bidderEmail,
         phone: bidderPhone,
         status: "0",
         product: product.name,
@@ -234,7 +234,7 @@ const BiddingProductDetails: React.FC = () => {
         "/api/epawn-biddings",
         bidData
       );
-      console.log("Response:", response.data);
+      console.log("biddings:", response.data);
 
       toast.success("Bid placed successfully!");
       setDialogOpen(false);
@@ -302,8 +302,6 @@ const BiddingProductDetails: React.FC = () => {
     }
   };
 
-  console.log(product);
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -348,72 +346,84 @@ const BiddingProductDetails: React.FC = () => {
               <p className="text-gray-600">{product.description}</p>
             </div>
 
-            {product.status === "0" && (
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="w-full">Place Bid</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Place Your Bid</DialogTitle>
-                  </DialogHeader>
-                  <form onSubmit={handleBidSubmit} className="space-y-4 mt-4">
-                    <div>
-                      <label className="text-sm font-medium">Your Name</label>
-                      <Input
-                        required
-                        value={loginUser?.full_name}
-                        onChange={(e) => setBidderName(e.target.value)}
-                        placeholder={
-                          loginUser?.full_name || "Please enter your name"
-                        }
-                        readOnly
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">
-                        Bid Amount (₦)
-                      </label>
-                      <Input
-                        required
-                        type="number"
-                        value={bidAmount}
-                        onChange={(e) => setBidAmount(e.target.value)}
-                        placeholder="Enter bid amount"
-                        min={product.price}
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Email</label>
-                      <Input
-                        required
-                        type="email"
-                        value={loginUser?.email}
-                        readOnly
-                        onChange={(e) => setBidderEmail(e.target.value)}
-                        placeholder={loginUser?.email || "Enter your email"}
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Phone</label>
-                      <Input
-                        required
-                        value={bidderPhone}
-                        onChange={(e) => setBidderPhone(e.target.value)}
-                        placeholder="Enter your phone number"
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={isSubmitting}
+            {product.status === "0" &&
+              memberDetails?.membership_number !== product.member_id && (
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="w-full">Place Bid</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Place Your Bid</DialogTitle>
+                    </DialogHeader>
+                    <div
+                      className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4"
+                      role="alert"
                     >
-                      {isSubmitting ? "Submitting..." : "Submit Bid"}
-                    </Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
-            )}
+                      <p className="font-bold">Important Notice</p>
+                      <p>
+                        Seller may not be able to contact you if contact
+                        information is not available
+                      </p>
+                    </div>
+                    <form onSubmit={handleBidSubmit} className="space-y-4 mt-4">
+                      <div>
+                        <label className="text-sm font-medium">Bidder Id</label>
+                        <Input
+                          required
+                          value={memberDetails?.membership_number}
+                          onChange={(e) => setBidderName(e.target.value)}
+                          placeholder={
+                            memberDetails?.membership_number ||
+                            "Please enter your name"
+                          }
+                          readOnly
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">
+                          Bid Amount (₦)
+                        </label>
+                        <Input
+                          required
+                          type="number"
+                          value={bidAmount}
+                          onChange={(e) => setBidAmount(e.target.value)}
+                          placeholder="Enter bid amount"
+                          // min={product.price}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Email</label>
+                        <Input
+                          required
+                          type="email"
+                          value={bidderEmail}
+                          readOnly
+                          onChange={(e) => setBidderEmail(e.target.value)}
+                          placeholder="Enter your email"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Phone</label>
+                        <Input
+                          required
+                          value={bidderPhone}
+                          onChange={(e) => setBidderPhone(e.target.value)}
+                          placeholder="Enter your phone number"
+                        />
+                      </div>
+                      <Button
+                        type="submit"
+                        className="w-full"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Submitting..." : "Submit Bid"}
+                      </Button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              )}
           </div>
         </div>
 
@@ -421,14 +431,20 @@ const BiddingProductDetails: React.FC = () => {
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-4">Bid History</h2>
 
-          <BidHistoryTable
-            bids={bids}
-            onUpdateStatus={handleStatusUpdate}
-            product={product}
-            isOwner={Boolean(
-              memberDetails?.membership_number === product.member_id
-            )}
-          />
+          {Boolean(memberDetails?.membership_number) && (
+            <BidHistoryTable
+              bids={bids.filter(
+                (bid) =>
+                  memberDetails?.membership_number === product.member_id ||
+                  bid.member_id === memberDetails?.membership_number
+              )}
+              onUpdateStatus={handleStatusUpdate}
+              product={product}
+              isOwner={Boolean(
+                memberDetails?.membership_number === product.member_id
+              )}
+            />
+          )}
         </div>
       </div>
       <Footer />

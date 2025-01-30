@@ -38,6 +38,20 @@ export default async function handler(
   try {
     if (id && endpointStr === "Epawn Subscriber") {
       const url = `https://staging.chevroncemcs.com/api/resource/${endpointStr}/SUB-${id}`;
+
+      try {
+        await axios.head(url, {
+          auth: {
+            username: "d5ea6c1a0aaeb82",
+            password: "0476216f7e4e8ca",
+          },
+        });
+      } catch (error) {
+        return res
+          .status(404)
+          .json({ exists: false, error: "Resource not found" });
+      }
+
       const response = await axios.get(url, {
         auth: {
           username: "d5ea6c1a0aaeb82",

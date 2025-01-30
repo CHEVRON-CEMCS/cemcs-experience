@@ -56,7 +56,7 @@ const Reservations = () => {
     { img: "/UK.png", location: "United Kingdom", distance: "Visa" },
     { img: "/Qatar.png", location: "Qatar", distance: "Visa" },
     { img: "/Dubai.png", location: "Dubai", distance: "Visa" },
-    { img: "/Spain.png", location: "Spain", distance: "Visa" },
+    // { img: "/Spain.png", location: "Spain", distance: "Visa" },
   ];
 
   return (
