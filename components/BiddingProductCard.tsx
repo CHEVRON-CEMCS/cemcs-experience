@@ -1,16 +1,19 @@
-import React from 'react';
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useAuthStore } from "../store/authStore";
 
 interface BiddingProduct {
   name: string;
   product_name: string;
+  member_id: string;
   price: number;
   image: string;
   status: string;
   description: string;
+  subscriber_id: string;
   owner_name: string;
 }
 
@@ -20,31 +23,43 @@ interface BiddingProductCardProps {
 
 export function BiddingProductCard({ product }: BiddingProductCardProps) {
   const router = useRouter();
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
+  const { memberDetails } = useAuthStore();
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
 
   const imageUrl = product.image?.startsWith("http")
-  ? product.image
-  : product.image
-  ? `${baseUrl}/${product.image}` // Add the forward slash here
-  : "/placeholder.jpg";
+    ? product.image
+    : product.image
+      ? `${baseUrl}/${product.image}` // Add the forward slash here
+      : "/placeholder.jpg";
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
-      case "0": return "bg-yellow-100 text-yellow-800 ring-yellow-600/20";
-      case "1": return "bg-green-100 text-green-800 ring-green-600/20";
-      case "2": return "bg-red-100 text-red-800 ring-red-600/20";
-      default: return "bg-gray-100 text-gray-800 ring-gray-600/20";
+      case "0":
+        return "bg-yellow-100 text-yellow-800 ring-yellow-600/20";
+      case "1":
+        return "bg-green-100 text-green-800 ring-green-600/20";
+      case "2":
+        return "bg-red-100 text-red-800 ring-red-600/20";
+      default:
+        return "bg-gray-100 text-gray-800 ring-gray-600/20";
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "0": return "Open for Bidding";
-      case "1": return "Bid Accepted";
-      case "2": return "Closed";
-      default: return "Unknown";
+      case "0":
+        return "Open for Bidding";
+      case "1":
+        return "Bid Accepted";
+      case "2":
+        return "Closed";
+      default:
+        return "Unknown";
     }
   };
+
+  console.log(product);
 
   return (
     <div className="rounded-lg group cursor-pointer flex flex-col h-full w-full sm:max-w-xs md:max-w-sm lg:max-w-md border border-gray-200 p-4">
@@ -67,29 +82,38 @@ export function BiddingProductCard({ product }: BiddingProductCardProps) {
             <h1 className="font-semibold text-base sm:text-lg md:text-xl line-clamp-2">
               {product.product_name}
             </h1>
-            <p className="text-sm text-gray-600 mt-1">Posted by: {product.owner_name}</p>
+            <p className="text-sm text-gray-600 mt-1">
+              Posted by: {product.subscriber_id}
+            </p>
           </div>
 
           <div className="mt-4 space-y-2">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Starting Price:</span>
-              <span className="font-bold text-primary">₦{product.price?.toLocaleString()}</span>
+              <span className="font-bold text-primary">
+                ₦{product.price?.toLocaleString()}
+              </span>
             </div>
-            
-            <div className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${getStatusBadgeColor(product.status)} ring-1 ring-inset`}>
+
+            <div
+              className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${getStatusBadgeColor(product.status)} ring-1 ring-inset`}
+            >
               {getStatusText(product.status)}
             </div>
           </div>
         </div>
       </div>
 
-      <Button 
+      <Button
         onClick={() => router.push(`/biddingproductdetails/${product.name}`)}
         className="w-full mt-4 text-xs sm:text-base"
         variant={product.status === "0" ? "default" : "secondary"}
         disabled={product.status !== "0"}
       >
-        {product.status === "0" ? "Place Bid" : "View Details"}
+        {product.status === "0" &&
+        memberDetails?.membership_number !== product.member_id
+          ? "Place Bid"
+          : "View Details"}
       </Button>
     </div>
   );
