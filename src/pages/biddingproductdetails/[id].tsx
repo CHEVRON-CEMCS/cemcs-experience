@@ -313,7 +313,7 @@ const BiddingProductDetails: React.FC = () => {
               src={imageUrl}
               alt={product.product_name}
               fill
-              className="object-cover rounded-lg"
+              className="object-contain object-center rounded-lg"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
