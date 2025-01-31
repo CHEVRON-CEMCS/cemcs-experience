@@ -398,7 +398,9 @@ const BiddingProductDetails: React.FC = () => {
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-medium">Email</label>
+                        <label className="text-sm font-medium">
+                          Email (Optional)
+                        </label>
                         <Input
                           required
                           type="email"
@@ -408,7 +410,9 @@ const BiddingProductDetails: React.FC = () => {
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-medium">Phone</label>
+                        <label className="text-sm font-medium">
+                          Phone (Optional)
+                        </label>
                         <Input
                           required
                           value={bidderPhone}

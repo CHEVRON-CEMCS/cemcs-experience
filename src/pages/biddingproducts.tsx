@@ -97,12 +97,14 @@ const BiddingProducts: React.FC = () => {
             Products for Bidding
           </h1>
           <div className="flex space-x-5">
-            <button
-              onClick={() => (window.location.href = "/subscriber")}
-              className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
-            >
-              Become a Subscriber
-            </button>
+            {!isSubscriber && (
+              <button
+                onClick={() => (window.location.href = "/subscriber")}
+                className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Become a Subscriber
+              </button>
+            )}
 
             {isSubscriber && (
               <Link href="/epawnupload">
