@@ -15,9 +15,9 @@ import Link from "next/link";
 import { Navbar } from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { useCartStore } from "../../store/cartStore";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import { Toaster, toast } from "sonner";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useAuthStore } from "../../store/authStore";
@@ -61,6 +61,7 @@ const Cart = () => {
   const [voucherBalance, setVoucherBalance] = useState<number | null>(null);
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [voucherDiscount, setVoucherDiscount] = useState(0);
+  const [receipt, setReceipt] = useState<File | null>(null);
 
   const router = useRouter();
   const baseUrl =
@@ -145,6 +146,33 @@ const Cart = () => {
         </div>
       ),
     },
+  };
+
+  const [formData, setFormData] = useState<{
+    image: File | null;
+  }>({
+    image: null,
+  });
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleClear = () => {
+    setFormData({
+      image: null,
+    });
+    setReceipt(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Manually reset the file input
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Whenever the receipt changes, update formData
+    if (e.target.files && e.target.files[0]) {
+      setFormData((prev) => ({
+        ...prev,
+        image: e.target.files![0],
+      }));
+    }
   };
 
   const checkVoucherBalance = async () => {
@@ -241,9 +269,26 @@ const Cart = () => {
       return;
     }
 
+    if (selectedPayment === "Bank Transfer" && !formData.image) {
+      console.log("Please attach receipt");
+      toast.error("Please attach receipt");
+      return;
+    }
+
     setIsCheckingOut(true); // Start loading
 
     try {
+      let imageUrl = "";
+      if (formData.image) {
+        // First, upload the image
+        const formDataImage = new FormData();
+        formDataImage.append("file", formData.image);
+
+        const uploadResponse = await axios.post("/api/upload", formDataImage);
+        imageUrl = uploadResponse.data.file_url;
+        console.log("Image uploaded:", imageUrl);
+      }
+
       const orderData = {
         doctype: "Product Order",
         order_date: new Date().toISOString().split("T")[0],
@@ -263,6 +308,7 @@ const Cart = () => {
         shipping_fee: transactionFee,
         tax_amount: 0,
         total_amount: total,
+        payment_receipt: imageUrl,
       };
 
       console.log("Order Data:", orderData);
@@ -642,6 +688,38 @@ const Cart = () => {
                     </DialogContent>
                   </Dialog>
                 )}
+                {selectedPayment === "Bank Transfer" && (
+                  <div className="mt-4 space-y-2">
+                    <label
+                      htmlFor="receipt-upload"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Upload Payment Receipt
+                    </label>
+                    <input
+                      ref={fileInputRef} // Attach the ref here
+                      id="receipt-upload"
+                      type="file"
+                      accept="image/*,application/pdf"
+                      onChange={handleImageChange}
+                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    />
+                    {formData.image && (
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-green-600">
+                          Receipt Uploaded: {formData.image.name}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={handleClear}
+                          className="ml-2 text-sm font-medium text-red-600 hover:text-red-500"
+                        >
+                          Clear
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <Button
                   className="w-full bg-blue-500 mt-4"
@@ -685,6 +763,7 @@ const Cart = () => {
                     onclose={() => setShowModal(false)}
                   />
                 )}
+                <Toaster expand={true} richColors position="bottom-center" />
               </div>
             </section>
           </div>
