@@ -116,6 +116,15 @@ const BidHistoryTable: React.FC<BidHistoryTableProps> = ({
 
   return (
     <div className="border rounded-lg">
+      {isOwner && (
+        <div
+          className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4"
+          role="alert"
+        >
+          <p className="font-bold">Important Notice</p>
+          <p>Once accepted the bid status cannot be reverted.</p>
+        </div>
+      )}
       <Table>
         <TableHeader>
           <TableRow>
@@ -131,9 +140,21 @@ const BidHistoryTable: React.FC<BidHistoryTableProps> = ({
         <TableBody>
           {bids.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={isOwner ? 5 : 4} className="text-center py-4">
-                No bids yet
-              </TableCell>
+              {isOwner ? (
+                <TableCell
+                  colSpan={isOwner ? 5 : 4}
+                  className="text-center py-4"
+                >
+                  No bids yet
+                </TableCell>
+              ) : (
+                <TableCell
+                  colSpan={isOwner ? 5 : 4}
+                  className="text-center py-4"
+                >
+                  Place your bids
+                </TableCell>
+              )}
             </TableRow>
           ) : (
             bids.map((bid) => (

@@ -323,7 +323,7 @@ const BiddingProductDetails: React.FC = () => {
             <div>
               <h1 className="text-3xl font-bold">{product.product_name}</h1>
               <p className="text-gray-600 mt-2">
-                Posted by: {product.owner_name}
+                Posted by: {product.subscriber_id}
               </p>
             </div>
 
@@ -343,7 +343,11 @@ const BiddingProductDetails: React.FC = () => {
 
             <div className="space-y-2">
               <p className="text-lg font-semibold">Description:</p>
-              <p className="text-gray-600">{product.description}</p>
+              <div className="border border-gray-300 p-2 rounded-md w-full h-24 overflow-y-auto">
+                <p className="text-gray-600 break-words whitespace-normal">
+                  {product.description}
+                </p>
+              </div>
             </div>
 
             {product.status === "0" &&
@@ -399,7 +403,6 @@ const BiddingProductDetails: React.FC = () => {
                           required
                           type="email"
                           value={bidderEmail}
-                          readOnly
                           onChange={(e) => setBidderEmail(e.target.value)}
                           placeholder="Enter your email"
                         />
