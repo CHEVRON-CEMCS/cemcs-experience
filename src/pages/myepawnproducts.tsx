@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from "../../components/Navbar";
-import { BiddingProductCard, LoadingBiddingProductCard } from "../../components/BiddingProductCard";
+import {
+  BiddingProductCard,
+  LoadingBiddingProductCard,
+} from "../../components/BiddingProductCard";
 import Footer from "../../components/Footer";
 import axios, { AxiosError } from "axios";
 import { Toaster, toast } from "sonner";
@@ -22,7 +25,8 @@ interface BiddingProduct {
 }
 
 const MyEpawnProducts: React.FC = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
   const [products, setProducts] = useState<BiddingProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,39 +38,46 @@ const MyEpawnProducts: React.FC = () => {
 
       try {
         const response = await axios.get("/api/Epawn Products");
-        
-        console.log('Current user membership number:', memberDetails.membership_number);
-        console.log('All products:', response.data.data);
-        
+
+        console.log(
+          "Current user membership number:",
+          memberDetails.membership_number
+        );
+        console.log("All products:", response.data.data);
+
         // Log each product's member_id for comparison
         response.data.data.forEach((product: BiddingProduct) => {
-          console.log('Product:', {
+          console.log("Product:", {
             name: product.product_name,
             member_id: product.member_id,
-            matches: product.member_id === memberDetails.membership_number
+            matches: product.member_id === memberDetails.membership_number,
           });
         });
 
         const userProducts = response.data.data.filter(
           (product: BiddingProduct) => {
-            const matches = product.member_id === memberDetails.membership_number;
-            console.log(`Comparing: product ${product.member_id} with user ${memberDetails.membership_number} = ${matches}`);
+            const matches =
+              product.subscriber_id ===
+              `SUB-${memberDetails.membership_number}`;
+            console.log(
+              `Comparing: product ${product.member_id} with user ${memberDetails.membership_number} = ${matches}`
+            );
             return matches;
           }
         );
 
         // Log filtered products
-        console.log('Filtered products:', userProducts);
+        console.log("Filtered products:", userProducts);
 
         const productData = userProducts.map((product: BiddingProduct) => ({
           ...product,
-          image: product.image 
-            ? product.image.startsWith('http') 
-              ? product.image 
+          image: product.image
+            ? product.image.startsWith("http")
+              ? product.image
               : `${baseUrl}/${product.image}`
-            : '/placeholder.jpg'
+            : "/placeholder.jpg",
         }));
-        
+
         setProducts(productData);
       } catch (err) {
         const errorMessage =
@@ -85,10 +96,14 @@ const MyEpawnProducts: React.FC = () => {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case "0": return "Open for Bidding";
-      case "1": return "Bid Accepted";
-      case "2": return "Closed";
-      default: return "Unknown";
+      case "0":
+        return "Open for Bidding";
+      case "1":
+        return "Bid Accepted";
+      case "2":
+        return "Closed";
+      default:
+        return "Unknown";
     }
   };
 
@@ -105,7 +120,7 @@ const MyEpawnProducts: React.FC = () => {
             </Button>
           </Link>
         </div>
-        
+
         <div className="w-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-8 mb-10">
           {loading ? (
             <>
@@ -119,7 +134,9 @@ const MyEpawnProducts: React.FC = () => {
             </div>
           ) : products.length === 0 ? (
             <div className="col-span-full text-center py-8">
-              <p className="text-gray-500 mb-4">You haven't uploaded any products yet</p>
+              <p className="text-gray-500 mb-4">
+                You haven't uploaded any products yet
+              </p>
               <Link href="/epawnupload">
                 <Button>Upload Your First Product</Button>
               </Link>

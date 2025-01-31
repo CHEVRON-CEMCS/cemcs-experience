@@ -313,7 +313,7 @@ const BiddingProductDetails: React.FC = () => {
               src={imageUrl}
               alt={product.product_name}
               fill
-              className="object-cover rounded-lg"
+              className="object-contain object-center rounded-lg"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
@@ -323,7 +323,7 @@ const BiddingProductDetails: React.FC = () => {
             <div>
               <h1 className="text-3xl font-bold">{product.product_name}</h1>
               <p className="text-gray-600 mt-2">
-                Posted by: {product.owner_name}
+                Posted by: {product.subscriber_id}
               </p>
             </div>
 
@@ -343,7 +343,11 @@ const BiddingProductDetails: React.FC = () => {
 
             <div className="space-y-2">
               <p className="text-lg font-semibold">Description:</p>
-              <p className="text-gray-600">{product.description}</p>
+              <div className="border border-gray-300 p-2 rounded-md w-full h-24 overflow-y-auto">
+                <p className="text-gray-600 break-words whitespace-normal">
+                  {product.description}
+                </p>
+              </div>
             </div>
 
             {product.status === "0" &&
@@ -394,18 +398,21 @@ const BiddingProductDetails: React.FC = () => {
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-medium">Email</label>
+                        <label className="text-sm font-medium">
+                          Email (Optional)
+                        </label>
                         <Input
                           required
                           type="email"
                           value={bidderEmail}
-                          readOnly
                           onChange={(e) => setBidderEmail(e.target.value)}
                           placeholder="Enter your email"
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-medium">Phone</label>
+                        <label className="text-sm font-medium">
+                          Phone (Optional)
+                        </label>
                         <Input
                           required
                           value={bidderPhone}

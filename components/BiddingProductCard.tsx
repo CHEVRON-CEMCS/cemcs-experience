@@ -72,7 +72,7 @@ export function BiddingProductCard({ product }: BiddingProductCardProps) {
             src={imageUrl}
             alt={product.product_name}
             fill
-            className="object-cover object-center rounded-lg"
+            className="object-contain object-center rounded-lg"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
