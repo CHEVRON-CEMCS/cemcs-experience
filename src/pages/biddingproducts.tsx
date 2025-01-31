@@ -40,16 +40,19 @@ const BiddingProducts: React.FC = () => {
         const response = await axios.get("/api/Epawn Products");
 
         // Process the products and handle image URLs
-        const productData = response.data.data.map(
-          (product: BiddingProduct) => ({
+        const productData = response.data.data
+          .map((product: BiddingProduct) => ({
             ...product,
             image: product.image
               ? product.image.startsWith("http")
                 ? product.image
                 : `${baseUrl}/${product.image}`
               : "/placeholder.jpg",
-          })
-        );
+          }))
+          .sort(
+            (a: BiddingProduct, b: BiddingProduct) =>
+              (Number(a.status) || 0) - (Number(b.status) || 0)
+          );
 
         setProducts(productData);
       } catch (err) {
