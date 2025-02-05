@@ -25,6 +25,7 @@ export default async function handler(
         '["name","product_name","price","pro_image","category","sub_category","featured","status"]',
       "Flight Booking": '["name","customer"]',
       "Tour Booking": '["name","customer"]',
+      "Hotel Booking": '["name", "customer"]',
       "Tour Package": '["name","package_name"]',
       "Experience Blog":
         '["name","title","featured_image","publish_date","status"]',
@@ -107,6 +108,7 @@ export default async function handler(
     // Handle status filters for different product types
     if (endpointStr === "Product") {
       filters.push(["status", "=", "Active"]);
+      // filters.push(["status", "=", "Out%20of%20Stock"]);
     }
 
     // Add search filter if search query exists
