@@ -59,7 +59,7 @@ export function BiddingProductCard({ product }: BiddingProductCardProps) {
     }
   };
 
-  console.log(product);
+  // console.log(product);
 
   return (
     <div className="rounded-lg group cursor-pointer flex flex-col h-full w-full sm:max-w-xs md:max-w-sm lg:max-w-md border border-gray-200 p-4">

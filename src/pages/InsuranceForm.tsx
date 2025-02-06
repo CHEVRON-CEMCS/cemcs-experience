@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
-import { toast } from "@/hooks/use-toast";
+// import { toast } from "@/hooks/use-toast";
+import { Toaster, toast } from "sonner";
+// import
 import axios from "axios";
 import {
   Dialog,
@@ -27,7 +29,7 @@ interface FormErrors {
 
 const InsuranceForm = ({ cancelRedirectRoute = "/insurance" }) => {
   const router = useRouter();
-  const { memberDetails } = useAuthStore();
+  const { memberDetails, loginUser } = useAuthStore();
   const [formData, setFormData] = useState({
     fullName: "",
     occupation: "",
@@ -81,13 +83,13 @@ const InsuranceForm = ({ cancelRedirectRoute = "/insurance" }) => {
       router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
       return;
     }
+    if (loginUser?.userType === "erp") {
+      toast.error("Not allowed");
+      return;
+    }
 
     if (!validateForm()) {
-      toast({
-        title: "error",
-        description: "Please fix the errors in the form",
-      });
-      return;
+      toast.error("Please fix the errors in the form");
     }
 
     setIsSubmitting(true);
@@ -112,13 +114,7 @@ const InsuranceForm = ({ cancelRedirectRoute = "/insurance" }) => {
       }
     } catch (error) {
       console.log(error);
-      toast({
-        title: "error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "insurance indication failed",
-      });
+      toast.error("Try again later");
     } finally {
       setIsSubmitting(false);
     }
@@ -271,6 +267,7 @@ const InsuranceForm = ({ cancelRedirectRoute = "/insurance" }) => {
           </CardContent>
         </Card>
       </div>
+      <Toaster expand={true} richColors position="bottom-center" />
     </div>
   );
 };

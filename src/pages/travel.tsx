@@ -13,15 +13,16 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { FlightBooking } from "../../types/flight";
-import { useToast } from "@/hooks/use-toast";
+// import { useToast } from "@/hooks/use-toast";
+import { Toaster, toast } from "sonner";
 import { useRouter } from "next/router";
 import { useAuthStore } from "../../store/authStore";
 // import { LoginModal } from '../../components/LoginModal';
 
 const Travel = () => {
-  const { toast } = useToast();
+  // const { toast } = useToast();
   const router = useRouter();
-  const { memberDetails } = useAuthStore();
+  const { memberDetails, loginUser } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [checkDeparture, setCheckDeparture] = useState<string | null>(null);
@@ -65,6 +66,12 @@ const Travel = () => {
     if (!memberDetails?.membership_number) {
       // Redirect to signin page with return URL
       router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
+      return;
+    }
+
+    if (loginUser?.userType === "erp") {
+      toast.error("Not allowed");
+      setIsLoading(false);
       return;
     }
 
@@ -127,10 +134,7 @@ const Travel = () => {
       const response = await axios.post("/api/flight-booking", bookingData);
       console.log("res:", response);
 
-      toast({
-        title: "Success",
-        description: "Flight booking request submitted successfully!",
-      });
+      toast.success("Flight booking request submitted successfully!");
 
       router.push("/flightSuccess");
     } catch (error: any) {
@@ -141,11 +145,7 @@ const Travel = () => {
         error.response?.data?.exception ||
         "Failed to submit booking request. Please try again.";
 
-      toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      toast.error("Failed to submit booking request. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -344,6 +344,7 @@ const Travel = () => {
           </form>
         </div>
       </div>
+      <Toaster expand={true} richColors position="bottom-center" />
     </div>
   );
 };

@@ -204,6 +204,11 @@ const BiddingProductDetails: React.FC = () => {
       router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
       return;
     }
+    if (loginUser.userType === "erp") {
+      toast.error("Not allowed");
+      setIsSubmitting(false);
+      return;
+    }
     try {
       if (!product || !memberDetails) {
         toast.error("Missing product or member details");

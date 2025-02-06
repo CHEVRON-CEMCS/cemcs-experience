@@ -10,15 +10,25 @@ interface Booking {
   name: string;
 }
 
-type BookingType = "flight" | "tour";
+interface FlightRes {
+  name: string;
+  customer: string;
+}
+
+type BookingType = "flight" | "tour" | "hotel";
 
 const CombinedBookings = () => {
   const { memberDetails } = useAuthStore();
   const [activeTab, setActiveTab] = useState<BookingType>("flight");
   const [flightBookings, setFlightBookings] = useState<Booking[]>([]);
   const [tourBookings, setTourBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState({ flight: true, tour: true });
-  const [error, setError] = useState({ flight: null, tour: null });
+  const [hotelBookings, setHotelBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState({
+    flight: true,
+    tour: true,
+    hotel: true,
+  });
+  const [error, setError] = useState({ flight: null, tour: null, hotel: null });
 
   const bookingConfigs = {
     flight: {
@@ -37,6 +47,14 @@ const CombinedBookings = () => {
       setState: setTourBookings,
       data: tourBookings,
     },
+    hotel: {
+      title: "Hotel Bookings",
+      apiEndpoint: "api/Hotel Booking",
+      linkPrefix: "/hotelbooking",
+      imageSrc: "/tourbook.jpg",
+      setState: setHotelBookings,
+      data: hotelBookings,
+    },
   };
 
   const fetchBookings = async (type: BookingType) => {
@@ -50,13 +68,21 @@ const CombinedBookings = () => {
     }
 
     try {
-      const response = await axios.get(bookingConfigs[type].apiEndpoint, {
+      const response = await axios.get(`${bookingConfigs[type].apiEndpoint}`, {
         params: {
           customer: memberDetails.membership_number,
         },
       });
-      console.log(`${type} API Response:`, response.data);
-      bookingConfigs[type].setState(response.data.data);
+      if (Array.isArray(response.data.data)) {
+        const filteredData = response.data.data.filter(
+          (item: FlightRes) => item.customer === memberDetails.membership_number
+        );
+        console.log(`${type} filtered data:`, filteredData);
+
+        bookingConfigs[type].setState(filteredData);
+      }
+      // console.log(`${type} API Response:`, response.data);
+
       setError((prev) => ({ ...prev, [type]: null }));
     } catch (err) {
       console.error(`${type} API Error:`, err);
@@ -73,6 +99,7 @@ const CombinedBookings = () => {
   useEffect(() => {
     fetchBookings("flight");
     fetchBookings("tour");
+    fetchBookings("hotel");
   }, [memberDetails?.membership_number]);
 
   const renderBookings = (type: BookingType) => {
@@ -154,12 +181,15 @@ const CombinedBookings = () => {
           className="mt-4 sm:mt-6"
           onValueChange={(value) => setActiveTab(value as BookingType)}
         >
-          <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsList className="grid w-full max-w-md grid-cols-3">
             <TabsTrigger value="flight" className="text-sm sm:text-base">
               Flight Bookings
             </TabsTrigger>
             <TabsTrigger value="tour" className="text-sm sm:text-base">
               Tour Bookings
+            </TabsTrigger>
+            <TabsTrigger value="hotel" className="text-sm sm:text-base">
+              Hotel Bookings
             </TabsTrigger>
           </TabsList>
           <TabsContent value="flight" className="mt-4 sm:mt-6">
@@ -167,6 +197,9 @@ const CombinedBookings = () => {
           </TabsContent>
           <TabsContent value="tour" className="mt-4 sm:mt-6">
             {renderBookings("tour")}
+          </TabsContent>
+          <TabsContent value="hotel" className="mt-4 sm:mt-6">
+            {renderBookings("hotel")}
           </TabsContent>
         </Tabs>
       </div>

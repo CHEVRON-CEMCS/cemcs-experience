@@ -43,8 +43,8 @@ export default async function handler(
       method: "post",
       url: "https://retiree.chevroncemcs.com/api/method/member_experience.api.ecommerce.fetch_cpay_loan",
       auth: {
-        username: "687e5004352a67d",
-        password: "411865a5b745cf9",
+        username: "f9d35ccd9be34cf",
+        password: "33e93cc3ed4e4e0",
       },
       data: req.body,
     });

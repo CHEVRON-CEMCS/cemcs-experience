@@ -46,7 +46,7 @@ const Cart = () => {
   const { items, removeItem, increaseQuantity, decreaseQuantity, clearCart } =
     useCartStore();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const { memberDetails } = useAuthStore();
+  const { memberDetails, loginUser } = useAuthStore();
   const [selectedPayment, setSelectedPayment] = useState<string>("");
   const [showModal, setShowModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -265,8 +265,18 @@ const Cart = () => {
     }
 
     if (selectedPayment === "CPay") {
+      if (loginUser?.userType === "erp") {
+        toast.error("Not allowed");
+        return;
+      }
       setShowModal(true);
       return;
+    }
+    if (selectedPayment === "Special Deposit") {
+      if (loginUser?.userType === "erp") {
+        toast.error("Not allowed");
+        return;
+      }
     }
 
     if (selectedPayment === "Bank Transfer" && !formData.image) {
