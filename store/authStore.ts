@@ -53,6 +53,9 @@ export const useAuthStore = create(
             baseUrl: baseUrl,
           });
 
+          const userType = baseUrl.split(".")[0];
+          // console.log(userType);
+
           // Set initial login state
           set({
             loginUser: {
@@ -60,49 +63,90 @@ export const useAuthStore = create(
               home_page: loginResponse.data.home_page,
               email: email,
               baseUrl: baseUrl,
-              userType: baseUrl.split(".")[0],
+              userType: userType,
             },
             isAuthenticated: true,
           });
 
           // Add a small delay to ensure session is established
           await new Promise((resolve) => setTimeout(resolve, 1000));
-
-          // Then try to fetch member data if needed
-          try {
-            const memberListResponse = await axios.get("/api/member", {
-              headers: {
-                "X-Base-URL": baseUrl,
-              },
-            });
-
-            if (
-              memberListResponse.data.data &&
-              memberListResponse.data.data.length > 0
-            ) {
-              const memberId = memberListResponse.data.data[0].name;
-
-              const memberDetailsResponse = await axios.get(
-                `/api/member/${memberId}`,
-                {
-                  headers: {
-                    "X-Base-URL": baseUrl,
-                  },
-                }
-              );
-
-              const memberData = memberDetailsResponse.data.data;
-
-              set({
-                memberDetails: {
-                  membership_number: memberData.membership_number,
-                  member_name: memberData.member_name,
+          if (userType === "erp") {
+            try {
+              const employeeListResponse = await axios.get("/api/employee", {
+                headers: {
+                  "X-Base-URL": baseUrl,
                 },
               });
+
+              console.log("employee:", employeeListResponse);
+              if (
+                employeeListResponse.data.data &&
+                employeeListResponse.data.data.length > 0
+              ) {
+                const employeeId = employeeListResponse.data.data[0].name;
+                const encodedEmployeeId = encodeURIComponent(employeeId);
+
+                const employeeDetailsResponse = await axios.get(
+                  `/api/employee/${encodedEmployeeId}`,
+                  {
+                    headers: {
+                      "X-Base-URL": baseUrl,
+                    },
+                  }
+                );
+
+                const memberData = employeeDetailsResponse.data.data;
+                // console.log("user:", employeeDetailsResponse);
+
+                set({
+                  memberDetails: {
+                    membership_number: memberData.employee_number,
+                    member_name: memberData.employee_name,
+                  },
+                });
+              }
+            } catch (staffError) {
+              console.error("Failed to fetch staff details:", staffError);
             }
-          } catch (memberError) {
-            console.error("Failed to fetch member details:", memberError);
-            // Don't throw here - we still want to consider the login successful
+          }
+
+          // Then try to fetch member data if needed
+          if (userType === "member") {
+            try {
+              const memberListResponse = await axios.get("/api/member", {
+                headers: {
+                  "X-Base-URL": baseUrl,
+                },
+              });
+
+              if (
+                memberListResponse.data.data &&
+                memberListResponse.data.data.length > 0
+              ) {
+                const memberId = memberListResponse.data.data[0].name;
+
+                const memberDetailsResponse = await axios.get(
+                  `/api/member/${memberId}`,
+                  {
+                    headers: {
+                      "X-Base-URL": baseUrl,
+                    },
+                  }
+                );
+
+                const memberData = memberDetailsResponse.data.data;
+
+                set({
+                  memberDetails: {
+                    membership_number: memberData.membership_number,
+                    member_name: memberData.member_name,
+                  },
+                });
+              }
+            } catch (memberError) {
+              console.error("Failed to fetch member details:", memberError);
+              // Don't throw here - we still want to consider the login successful
+            }
           }
 
           set({ isLoading: false });
