@@ -80,6 +80,7 @@ const BiddingProducts: React.FC = () => {
         );
         console.log(response.data);
         setIsSubscriber(!!response.data);
+        console.log("sub:", isSubscriber);
       } catch (error) {
         // console.error(error);
       }
@@ -87,6 +88,14 @@ const BiddingProducts: React.FC = () => {
 
     checkSubscriber();
   }, [memberDetails?.membership_number]);
+
+  useEffect(() => {
+    if (isSubscriber) {
+      toast.success("Welcome Subscriber", {
+        position: "top-center",
+      });
+    }
+  }, [isSubscriber]);
 
   return (
     <div className="min-h-screen flex flex-col">
