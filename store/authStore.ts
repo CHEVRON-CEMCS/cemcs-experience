@@ -111,7 +111,7 @@ export const useAuthStore = create(
           }
 
           // Then try to fetch member data if needed
-          if (userType === "member") {
+          if (userType === "member" || "retiree") {
             try {
               const memberListResponse = await axios.get("/api/member", {
                 headers: {

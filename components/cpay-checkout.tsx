@@ -100,11 +100,11 @@ const AddPaymentMethod: React.FC<CPayProps> = ({ amount, onclose }) => {
 
     setIsLoading(true);
     try {
-      const loanResponse = await axios.post("/api/check-loan-status", {
-        empno: memberDetails.membership_number,
-      });
+      // const loanResponse = await axios.post("/api/check-loan-status", {
+      //   empno: memberDetails.membership_number,
+      // });
 
-      console.log(loanResponse);
+      // console.log(loanResponse);
 
       const response = await axios.post("/api/c-pay", {
         empno: memberDetails?.membership_number,

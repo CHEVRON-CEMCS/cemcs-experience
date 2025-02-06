@@ -9,7 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { NavTravel } from "../../../components/NavTravel";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { toast } from "@/hooks/use-toast";
+// import { toast } from "@/hooks/use-toast";
+import { Toaster, toast } from "sonner";
 import { useAuthStore } from "../../../store/authStore";
 import ImageModal from "../../../components/ImageModal";
 // import { LoginModal } from '../../../components/LoginModal'
@@ -87,7 +88,7 @@ const HotelDetails = () => {
   const router = useRouter();
   const { id } = router.query;
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const { memberDetails } = useAuthStore();
+  const { memberDetails, loginUser } = useAuthStore();
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
 
@@ -157,6 +158,11 @@ const HotelDetails = () => {
       return;
     }
 
+    if (loginUser?.userType === "erp") {
+      toast.error("Not allowed");
+      return;
+    }
+
     if (
       !formData.customerName ||
       !formData.customerEmail ||
@@ -165,10 +171,7 @@ const HotelDetails = () => {
       !formData.checkOutDate ||
       !selectedRoom
     ) {
-      toast({
-        title: "Error",
-        description: "Please fill all required fields",
-      });
+      toast.error("Please fill all fields");
       return;
     }
 
@@ -198,14 +201,11 @@ const HotelDetails = () => {
       const response = await axios.post("/api/hotel-booking", bookingData);
       console.log("Response:", response.data);
 
-      toast({ title: "Success", description: "Booking confirmed!" });
+      toast.success("Booking confirmed");
       router.push("/bookingSuccess");
     } catch (error) {
       console.error("Error:", error);
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Booking failed",
-      });
+      toast.error("Booking failed");
     }
   };
 
@@ -567,6 +567,7 @@ const HotelDetails = () => {
           onClose={() => setIsImageModalOpen(false)}
         />
       </div>
+      <Toaster expand={true} richColors position="bottom-center" />
     </div>
   );
 };

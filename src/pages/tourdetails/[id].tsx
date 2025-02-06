@@ -10,6 +10,7 @@ import { NavTravel } from "../../../components/NavTravel";
 import { useRouter } from "next/router";
 import axios, { AxiosError } from "axios";
 import { useAuthStore } from "../../../store/authStore";
+import { Toaster, toast } from "sonner";
 // import { LoginModal } from "../../../components/LoginModal";
 
 interface BookingDetails {
@@ -24,7 +25,7 @@ interface BookingDetails {
 const TourDetails = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { memberDetails } = useAuthStore();
+  const { memberDetails, loginUser } = useAuthStore();
   const [booking, setBooking] = useState<BookingDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -98,6 +99,11 @@ const TourDetails = () => {
     if (!memberDetails?.membership_number) {
       // Redirect to signin page with return URL
       router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
+      return;
+    }
+
+    if (loginUser?.userType === "erp") {
+      toast.error("Not allowed");
       return;
     }
 
@@ -373,6 +379,7 @@ const TourDetails = () => {
           </div>
         </div>
       </div>
+      <Toaster expand={true} richColors position="bottom-center" />
     </div>
   );
 };

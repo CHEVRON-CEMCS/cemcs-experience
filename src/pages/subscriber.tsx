@@ -19,7 +19,7 @@ import { useAuthStore } from "../../store/authStore";
 const SubscriberRegistration: React.FC = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const { memberDetails } = useAuthStore();
+  const { memberDetails, loginUser } = useAuthStore();
 
   const [formData, setFormData] = useState({
     full_name: "",
@@ -69,6 +69,11 @@ const SubscriberRegistration: React.FC = () => {
 
     if (!memberDetails?.membership_number) {
       router.push(`/signin?redirect=${encodeURIComponent(router.asPath)}`);
+      return;
+    }
+    if (loginUser?.userType === "erp") {
+      toast.error("Not allowed");
+      setLoading(false);
       return;
     }
     try {
