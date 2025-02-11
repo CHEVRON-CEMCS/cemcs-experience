@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { NavbarLinks } from "./NavbarLinks";
-import { Search, ShoppingBagIcon, ShoppingCartIcon, X } from "lucide-react";
+import {
+  Search,
+  ShoppingBagIcon,
+  ShoppingCartIcon,
+  X,
+  XCircle,
+} from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -42,6 +48,7 @@ export function Navbar() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
@@ -224,6 +231,88 @@ export function Navbar() {
             )}
           </div>
         )}
+      </div>
+
+      <div className="md:hidden">
+        <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+          <SheetTrigger asChild>
+            <button className="text-gray-700">
+              <Search className="w-6 h-6" />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="top" className="p-4">
+            {/* Search Box */}
+            <div ref={searchContainerRef}>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setIsSearchOpen(false);
+                  router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                }}
+                className="relative"
+              >
+                <Input
+                  className="w-full pr-10"
+                  placeholder="Search for product..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => searchQuery.trim() && setShowResults(true)}
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setResults([]);
+                      setShowResults(false);
+                    }}
+                    className="absolute right-10 top-1/2 -translate-y-1/2 p-2 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition"
+                    aria-label="Clear search"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                )}
+              </form>
+
+              {/* Search Results in Modal */}
+              {showResults && (
+                <div className="mt-2 bg-white rounded-md shadow-lg border max-h-96 overflow-auto z-50">
+                  {isLoading ? (
+                    <div className="p-4 text-center text-gray-500">
+                      Loading...
+                    </div>
+                  ) : results.length === 0 ? (
+                    <div className="p-4 text-center text-gray-500">
+                      No products found
+                    </div>
+                  ) : (
+                    <div className="py-2">
+                      {results.map((product) => (
+                        <div
+                          key={product.name}
+                          className="px-4 py-2 hover:bg-gray-50 cursor-pointer"
+                          onClick={() => {
+                            setShowResults(false);
+                            setSearchQuery("");
+                            setIsSearchOpen(false);
+                            router.push(`/productdetails/${product.name}`);
+                          }}
+                        >
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {product.product_name}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            ₦{product.price.toLocaleString()}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
 
       <div className="flex items-center">
