@@ -66,6 +66,17 @@ const TourDetails = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    if (name === "phone") {
+      let formattedValue = value.replace(/[^\d+]/g, "");
+
+      if (formattedValue.startsWith("+234")) {
+        if (formattedValue.length > 14) return;
+      } else {
+        if (formattedValue.length > 11) return;
+      }
+
+      setFormData((prev) => ({ ...prev, [name]: formattedValue }));
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 

@@ -24,7 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "../../../store/authStore";
 import BidHistoryTable from "../../../components/BidHistoryTable";
-
+import { Trash } from "lucide-react";
 interface Bid {
   name: string;
   name1: string;
@@ -93,6 +93,39 @@ const BiddingProductDetails: React.FC = () => {
     };
   }
 
+  const handleDelete = async () => {
+    if (product?.status === "1") {
+      alert("❌ Cannot delete. A bid has already been accepted.");
+      return;
+    }
+    const confirmDelete = window.confirm("Are you sure you want to delete?");
+    if (!confirmDelete) return;
+
+    setLoading(true);
+    try {
+      const response = await axios.put(`/api/delete-product/${id}`);
+
+      const data = await response.data;
+
+      if (response.status != 200) {
+        console.log(response);
+        throw new Error(data.message || "Failed to delete product");
+      }
+
+      toast.success("Product deleted successfully");
+      alert("Product deleted successfully");
+      setTimeout(() => {
+        console.log("routing");
+        router.replace("/biddingproducts");
+      }, 500);
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Error deleting product");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleStatusUpdate = async (
     bidId: string,
     newStatus: string
@@ -146,7 +179,7 @@ const BiddingProductDetails: React.FC = () => {
           axios.get(`/api/Epawn Biddings?product_id=${id}`),
         ]);
 
-        console.log("Product response:", productRes.data.data);
+        console.log("bidding res:", bidsRes.data.data);
         setStatus(productRes.data.data.status);
         setProduct(productRes.data.data);
         setBids(bidsRes.data.data || []);
@@ -313,14 +346,26 @@ const BiddingProductDetails: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow py-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Product Image */}
-          <div className="relative aspect-square w-full">
-            <Image
-              src={imageUrl}
-              alt={product.product_name}
-              fill
-              className="object-contain object-center rounded-lg"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
+          <div className="relative w-full h-[400px]">
+            {memberDetails?.membership_number === product.member_id && (
+              <button
+                onClick={handleDelete}
+                className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition z-10"
+                disabled={loading}
+              >
+                <Trash className="w-5 h-5" />
+              </button>
+            )}
+            {/* Image Wrapper to prevent overlay issues */}
+            <div className="absolute inset-0">
+              <Image
+                src={imageUrl}
+                alt={product.product_name}
+                fill
+                className="object-contain object-center rounded-lg"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
           </div>
 
           {/* Product Details */}
@@ -407,7 +452,6 @@ const BiddingProductDetails: React.FC = () => {
                           Email (Optional)
                         </label>
                         <Input
-                          required
                           type="email"
                           value={bidderEmail}
                           onChange={(e) => setBidderEmail(e.target.value)}
@@ -419,7 +463,6 @@ const BiddingProductDetails: React.FC = () => {
                           Phone (Optional)
                         </label>
                         <Input
-                          required
                           value={bidderPhone}
                           onChange={(e) => setBidderPhone(e.target.value)}
                           placeholder="Enter your phone number"

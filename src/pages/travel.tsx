@@ -49,6 +49,17 @@ const Travel = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    if (name === "phone") {
+      let formattedValue = value.replace(/[^\d+]/g, "");
+
+      if (formattedValue.startsWith("+234")) {
+        if (formattedValue.length > 14) return;
+      } else {
+        if (formattedValue.length > 11) return;
+      }
+
+      setFormData((prev) => ({ ...prev, [name]: formattedValue }));
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -187,7 +198,8 @@ const Travel = () => {
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col sm:flex-row sm:space-x-5 w-full items-center">
               <div className="flex-1">
-                <Label>First Name</Label>
+                <Label>First Name </Label>
+                <span className="text-red-600">*</span>
                 <Input
                   name="firstName"
                   value={formData.firstName}
@@ -196,7 +208,8 @@ const Travel = () => {
                 />
               </div>
               <div className="flex-1 mt-4 sm:mt-0">
-                <Label>Last Name</Label>
+                <Label>Last Name </Label>
+                <span className="text-red-600">*</span>
                 <Input
                   name="lastName"
                   value={formData.lastName}
@@ -208,7 +221,8 @@ const Travel = () => {
 
             <div className="mt-5 space-y-5">
               <div>
-                <Label>Email Address</Label>
+                <Label>Email Address </Label>
+                <span className="text-red-600">*</span>
                 <Input
                   name="email"
                   type="email"
@@ -219,7 +233,8 @@ const Travel = () => {
               </div>
 
               <div>
-                <Label>Phone Number</Label>
+                <Label>Phone Number </Label>
+                <span className="text-red-600">*</span>
                 <Input
                   name="phone"
                   type="tel"
@@ -230,7 +245,8 @@ const Travel = () => {
               </div>
 
               <div>
-                <Label>Flying From</Label>
+                <Label>Flying From </Label>
+                <span className="text-red-600">*</span>
                 <Input
                   name="flyingFrom"
                   value={formData.flyingFrom}
@@ -240,7 +256,8 @@ const Travel = () => {
               </div>
 
               <div>
-                <Label>Flying To</Label>
+                <Label>Flying To </Label>
+                <span className="text-red-600">*</span>
                 <Input
                   name="flyingTo"
                   value={formData.flyingTo}
@@ -250,7 +267,8 @@ const Travel = () => {
               </div>
 
               <div>
-                <Label>Select Trip</Label>
+                <Label>Select Trip </Label>
+                <span className="text-red-600">*</span>
                 <Select
                   onValueChange={(value) =>
                     handleSelectChange("tripType", value)
@@ -267,7 +285,8 @@ const Travel = () => {
               </div>
 
               <div>
-                <Label>Departure Date</Label>
+                <Label>Departure Date </Label>
+                <span className="text-red-600">*</span>
                 <Input
                   name="departureDate"
                   type="date"
@@ -315,7 +334,8 @@ const Travel = () => {
               </div>
 
               <div>
-                <Label>Preferred Airline</Label>
+                <Label>Preferred Airline </Label>
+                <span className="text-red-600">*</span>
                 <Input
                   name="preferredAirline"
                   value={formData.preferredAirline}

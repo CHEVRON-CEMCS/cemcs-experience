@@ -445,14 +445,23 @@ const HotelDetails = () => {
                     <Label>Phone Number</Label>
                     <span className="text-red-600">*</span>
                     <Input
+                      name="phone"
                       type="tel"
                       value={formData.customerPhone}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        let value = e.target.value.replace(/[^\d+]/g, "");
+
+                        if (value.startsWith("+234")) {
+                          if (value.length > 14) return;
+                        } else {
+                          if (value.length > 11) return;
+                        }
+
                         setFormData({
                           ...formData,
-                          customerPhone: e.target.value,
-                        })
-                      }
+                          customerPhone: value,
+                        });
+                      }}
                       required
                     />
                   </div>

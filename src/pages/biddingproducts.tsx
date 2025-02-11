@@ -22,6 +22,7 @@ interface BiddingProduct {
   owner_name: string;
   subscriber_id: string;
   member_id: string;
+  is_deleted: number;
 }
 
 const BiddingProducts: React.FC = () => {
@@ -41,6 +42,7 @@ const BiddingProducts: React.FC = () => {
 
         // Process the products and handle image URLs
         const productData = response.data.data
+          .filter((product: BiddingProduct) => product.is_deleted !== 1)
           .map((product: BiddingProduct) => ({
             ...product,
             image: product.image
@@ -53,7 +55,7 @@ const BiddingProducts: React.FC = () => {
             (a: BiddingProduct, b: BiddingProduct) =>
               (Number(a.status) || 0) - (Number(b.status) || 0)
           );
-
+        console.log(response.data.data);
         setProducts(productData);
       } catch (err) {
         const errorMessage =
@@ -78,9 +80,7 @@ const BiddingProducts: React.FC = () => {
         const response = await axios.get(
           `/api/Epawn Subscriber?id=${memberDetails.membership_number}`
         );
-        console.log(response.data);
         setIsSubscriber(!!response.data);
-        console.log("sub:", isSubscriber);
       } catch (error) {
         // console.error(error);
       }

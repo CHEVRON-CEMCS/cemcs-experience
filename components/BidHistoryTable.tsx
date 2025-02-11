@@ -54,12 +54,12 @@ const BidHistoryTable: React.FC<BidHistoryTableProps> = ({
   product,
   isOwner,
 }) => {
-  console.log("BidHistoryTable Props:", {
-    isOwner,
-    productId: product.member_id,
-    bidsCount: bids.length,
-    hasSelect: !!Select,
-  });
+  // console.log("BidHistoryTable Props:", {
+  //   isOwner,
+  //   productId: product.member_id,
+  //   bidsCount: bids.length,
+  //   hasSelect: !!Select,
+  // });
   const [updateLoading, setUpdateLoading] = useState<string | null>(null);
   const hasAcceptedBid = bids.some((bid) => bid.status === "1");
 
