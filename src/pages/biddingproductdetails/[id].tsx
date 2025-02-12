@@ -47,7 +47,7 @@ interface Product {
   description: string;
   owner_name: string;
   subscriber_id: string;
-
+  is_deleted: number;
   member_id: string;
 }
 
@@ -180,6 +180,9 @@ const BiddingProductDetails: React.FC = () => {
         ]);
 
         console.log("bidding res:", bidsRes.data.data);
+        productRes.data.data.filter(
+          (product: Product) => product.is_deleted !== 1
+        );
         setStatus(productRes.data.data.status);
         setProduct(productRes.data.data);
         setBids(bidsRes.data.data || []);
