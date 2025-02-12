@@ -180,11 +180,11 @@ const BiddingProductDetails: React.FC = () => {
         ]);
 
         console.log("bidding res:", bidsRes.data.data);
-        productRes.data.data.filter(
-          (product: Product) => product.is_deleted !== 1
-        );
         setStatus(productRes.data.data.status);
-        setProduct(productRes.data.data);
+        const product = productRes.data.data;
+        if (product.is_deleted !== 1) {
+          setProduct(productRes.data.data);
+        }
         setBids(bidsRes.data.data || []);
       } catch (error) {
         console.error("Error:", error);
