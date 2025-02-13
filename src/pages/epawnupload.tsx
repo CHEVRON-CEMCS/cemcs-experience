@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Navbar } from "../../components/Navbar";
+import React, { useState, ChangeEvent } from "react";
+import { EPawnNav } from "../../components/EPawnNav";
 import Footer from "../../components/Footer";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
@@ -40,6 +40,23 @@ const ProductUpload: React.FC = () => {
       setFormData((prev) => ({
         ...prev,
         images: updatedImages,
+      }));
+    }
+  };
+
+  const handlePriceChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/,/g, ""); // Remove commas
+
+    if (rawValue === "") {
+      setFormData((prev) => ({
+        ...prev,
+        price: "",
+      }));
+    } else if (!isNaN(Number(rawValue))) {
+      const numericValue = Number(rawValue);
+      setFormData((prev) => ({
+        ...prev,
+        price: numericValue.toLocaleString("en-US"), // Format before storing
       }));
     }
   };
@@ -98,7 +115,7 @@ const ProductUpload: React.FC = () => {
         image_3: uploadedImages[2] || null,
         image_4: uploadedImages[3] || null,
         product_name: formData.product_name,
-        price: parseFloat(formData.price),
+        price: parseFloat(formData.price.replace(/,/g, "")),
         description: formData.description,
       };
 
@@ -121,7 +138,7 @@ const ProductUpload: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <EPawnNav />
       <div className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-bold mb-8">Upload Product</h1>
@@ -150,14 +167,9 @@ const ProductUpload: React.FC = () => {
               </label>
               <Input
                 required
-                type="number"
+                type="text"
                 value={formData.price}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    price: e.target.value,
-                  }))
-                }
+                onChange={handlePriceChange}
                 placeholder="Enter price"
                 min="0"
                 step="0.01"

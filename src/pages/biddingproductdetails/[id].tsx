@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { EPawnNav } from "../../../components/EPawnNav";
@@ -80,7 +80,7 @@ const BiddingProductDetails: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
-  const [bidAmount, setBidAmount] = useState("");
+  const [bidAmount, setBidAmount] = useState<string>("");
   const [bidderName, setBidderName] = useState("");
   const [bidderEmail, setBidderEmail] = useState("");
   const [bidderPhone, setBidderPhone] = useState("");
@@ -123,7 +123,7 @@ const BiddingProductDetails: React.FC = () => {
       alert("Product deleted successfully");
       setTimeout(() => {
         console.log("routing");
-        router.replace("/biddingproducts");
+        router.replace("/myepawnproducts");
       }, 500);
     } catch (error) {
       console.error("Delete error:", error);
@@ -235,6 +235,17 @@ const BiddingProductDetails: React.FC = () => {
     };
   }
 
+  const handleBidChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/,/g, "");
+
+    if (rawValue === "") {
+      setBidAmount("");
+    } else if (!isNaN(Number(rawValue))) {
+      const numericValue = Number(rawValue);
+      setBidAmount(numericValue.toLocaleString("en-US"));
+    }
+  };
+
   const handleBidSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -270,7 +281,7 @@ const BiddingProductDetails: React.FC = () => {
       const bidData: BidRequestData = {
         doctype: "Epawn Biddings",
         name1: loginUser?.full_name,
-        price: parseFloat(bidAmount),
+        price: parseFloat(bidAmount.replace(/,/g, "")),
         email: bidderEmail,
         phone: bidderPhone,
         status: "0",
@@ -511,9 +522,9 @@ const BiddingProductDetails: React.FC = () => {
                         </label>
                         <Input
                           required
-                          type="number"
+                          type="text"
                           value={bidAmount}
-                          onChange={(e) => setBidAmount(e.target.value)}
+                          onChange={handleBidChange}
                           placeholder="Enter bid amount"
                           // min={product.price}
                         />
@@ -536,8 +547,19 @@ const BiddingProductDetails: React.FC = () => {
                         </label>
                         <Input
                           required
+                          type="tel"
                           value={bidderPhone}
-                          onChange={(e) => setBidderPhone(e.target.value)}
+                          onChange={(e) => {
+                            let value = e.target.value.replace(/[^\d+]/g, "");
+
+                            if (value.startsWith("+234")) {
+                              if (value.length > 14) return;
+                            } else {
+                              if (value.length > 11) return;
+                            }
+
+                            setBidderPhone(value);
+                          }}
                           placeholder="Enter your phone number"
                         />
                       </div>
