@@ -450,38 +450,6 @@ export function Navbar() {
             </SheetContent>
           </Sheet>
         </div>
-
-        {isSubscriber && (
-          <div>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Avatar>
-                  {/* <AvatarImage src="https://github.com/shadcn.png" alt="profile" /> */}
-                  <AvatarFallback>
-                    {memberDetails?.member_name
-                      ? memberDetails.member_name
-                          .split(" ")
-                          .map((name) => name.charAt(0))
-                          .join("")
-                          .toUpperCase()
-                          .slice(0, 2)
-                      : "NA"}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Link href="/epawnsubscriberprofile">Subscriber Profile</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/myepawnproducts">My Epawn products</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        )}
       </div>
     </nav>
   );

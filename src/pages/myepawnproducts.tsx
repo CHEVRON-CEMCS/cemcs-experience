@@ -22,6 +22,7 @@ interface BiddingProduct {
   owner_name: string;
   subscriber_id: string;
   member_id: string;
+  is_deleted: number;
 }
 
 const MyEpawnProducts: React.FC = () => {
@@ -54,8 +55,8 @@ const MyEpawnProducts: React.FC = () => {
           });
         });
 
-        const userProducts = response.data.data.filter(
-          (product: BiddingProduct) => {
+        const userProducts = response.data.data
+          .filter((product: BiddingProduct) => {
             const matches =
               product.subscriber_id ===
               `SUB-${memberDetails.membership_number}`;
@@ -63,8 +64,8 @@ const MyEpawnProducts: React.FC = () => {
               `Comparing: product ${product.member_id} with user ${memberDetails.membership_number} = ${matches}`
             );
             return matches;
-          }
-        );
+          })
+          .filter((product: BiddingProduct) => product.is_deleted !== 1);
 
         // Log filtered products
         console.log("Filtered products:", userProducts);

@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Navbar } from "../../../components/Navbar";
+import { EPawnNav } from "../../../components/EPawnNav";
 import Footer from "../../../components/Footer";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -24,7 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "../../../store/authStore";
 import BidHistoryTable from "../../../components/BidHistoryTable";
-
+import { Trash } from "lucide-react";
 interface Bid {
   name: string;
   name1: string;
@@ -47,8 +48,11 @@ interface Product {
   description: string;
   owner_name: string;
   subscriber_id: string;
-
+  is_deleted: number;
   member_id: string;
+  image_2: string;
+  image_3: string;
+  image_4: string;
 }
 
 interface UpdateStatusRequest {
@@ -76,13 +80,14 @@ const BiddingProductDetails: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
-  const [bidAmount, setBidAmount] = useState("");
+  const [bidAmount, setBidAmount] = useState<string>("");
   const [bidderName, setBidderName] = useState("");
   const [bidderEmail, setBidderEmail] = useState("");
   const [bidderPhone, setBidderPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [status, setStatus] = useState<string>("");
+  const [modalImage, setModalImage] = useState<string | null>(null);
 
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
@@ -92,6 +97,41 @@ const BiddingProductDetails: React.FC = () => {
       status: string;
     };
   }
+
+  const handleDelete = async () => {
+    if (product?.status === "1") {
+      alert("❌ Cannot delete. A bid has already been accepted.");
+      return;
+    }
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this EPawn Product?"
+    );
+    if (!confirmDelete) return;
+
+    setLoading(true);
+    try {
+      const response = await axios.put(`/api/delete-product/${id}`);
+
+      const data = await response.data;
+
+      if (response.status != 200) {
+        console.log(response);
+        throw new Error(data.message || "Failed to delete product");
+      }
+
+      toast.success("Product deleted successfully");
+      alert("Product deleted successfully");
+      setTimeout(() => {
+        console.log("routing");
+        router.replace("/myepawnproducts");
+      }, 500);
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Error deleting product");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleStatusUpdate = async (
     bidId: string,
@@ -146,9 +186,12 @@ const BiddingProductDetails: React.FC = () => {
           axios.get(`/api/Epawn Biddings?product_id=${id}`),
         ]);
 
-        console.log("Product response:", productRes.data.data);
+        console.log("product res:", productRes.data.data);
         setStatus(productRes.data.data.status);
-        setProduct(productRes.data.data);
+        const product = productRes.data.data;
+        if (product.is_deleted !== 1) {
+          setProduct(productRes.data.data);
+        }
         setBids(bidsRes.data.data || []);
       } catch (error) {
         console.error("Error:", error);
@@ -192,6 +235,17 @@ const BiddingProductDetails: React.FC = () => {
     };
   }
 
+  const handleBidChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/,/g, "");
+
+    if (rawValue === "") {
+      setBidAmount("");
+    } else if (!isNaN(Number(rawValue))) {
+      const numericValue = Number(rawValue);
+      setBidAmount(numericValue.toLocaleString("en-US"));
+    }
+  };
+
   const handleBidSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -227,7 +281,7 @@ const BiddingProductDetails: React.FC = () => {
       const bidData: BidRequestData = {
         doctype: "Epawn Biddings",
         name1: loginUser?.full_name,
-        price: parseFloat(bidAmount),
+        price: parseFloat(bidAmount.replace(/,/g, "")),
         email: bidderEmail,
         phone: bidderPhone,
         status: "0",
@@ -267,7 +321,7 @@ const BiddingProductDetails: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        <EPawnNav />
         <div className="flex-grow flex items-center justify-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
         </div>
@@ -279,7 +333,7 @@ const BiddingProductDetails: React.FC = () => {
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        <EPawnNav />
         <div className="flex-grow flex items-center justify-center">
           <p className="text-xl text-gray-600">Product not found</p>
         </div>
@@ -307,20 +361,93 @@ const BiddingProductDetails: React.FC = () => {
     }
   };
 
+  const images = [
+    product.image,
+    product.image_2,
+    product.image_3,
+    product.image_4,
+  ].filter(Boolean);
+
+  const getGridClass = (imageCount: number) => {
+    switch (imageCount) {
+      case 1:
+        return "grid-cols-1";
+      case 2:
+        return "grid-cols-2";
+      case 3:
+        return "grid-cols-2 md:grid-cols-3";
+      default:
+        return "grid-cols-2";
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <EPawnNav />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow py-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Product Image */}
-          <div className="relative aspect-square w-full">
-            <Image
-              src={imageUrl}
-              alt={product.product_name}
-              fill
-              className="object-contain object-center rounded-lg"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
+          <div className="relative w-full h-[400px]">
+            {memberDetails?.membership_number === product.member_id && (
+              <button
+                onClick={handleDelete}
+                className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition z-10"
+                disabled={loading}
+              >
+                <Trash className="w-5 h-5" />
+              </button>
+            )}
+            {/* Image Wrapper to prevent overlay issues */}
+            <div className="flex flex-col md:flex-row h-auto md:h-[32.5rem] w-full">
+              <div
+                className={`grid ${getGridClass(images.length)} md:mb-28 gap-4 w-full`}
+              >
+                {images.map((img, index) => (
+                  <div
+                    key={index}
+                    className={`relative overflow-hidden rounded-lg transition-all duration-300 cursor-pointer hover:ring-2 hover:ring-gray-300 ${
+                      images.length === 1 ? "aspect-video" : "aspect-square"
+                    }`}
+                    onClick={() =>
+                      setModalImage(
+                        img ? `${baseUrl}${img}` : `/home${index + 2}.jpg`
+                      )
+                    }
+                  >
+                    <Image
+                      src={img ? `${baseUrl}${img}` : `/home${index + 2}.jpg`}
+                      alt={`${product.name} image ${index + 1}`}
+                      fill
+                      className={`${images.length === 1 ? "object-contain" : "object-cover"} transition-transform duration-300 hover:scale-105`}
+                    />
+                    <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-opacity duration-300" />
+                  </div>
+                ))}
+              </div>
+
+              {modalImage && (
+                <div
+                  className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+                  onClick={() => setModalImage(null)}
+                >
+                  <div className="relative w-full max-w-4xl max-h-[90vh] aspect-square">
+                    <button
+                      onClick={() => setModalImage(null)}
+                      className="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors"
+                    >
+                      <X size={24} />
+                    </button>
+                    <Image
+                      src={modalImage}
+                      alt="Enlarged product image"
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 1536px) 100vw, 1536px"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Product Details */}
@@ -395,9 +522,9 @@ const BiddingProductDetails: React.FC = () => {
                         </label>
                         <Input
                           required
-                          type="number"
+                          type="text"
                           value={bidAmount}
-                          onChange={(e) => setBidAmount(e.target.value)}
+                          onChange={handleBidChange}
                           placeholder="Enter bid amount"
                           // min={product.price}
                         />
@@ -420,8 +547,19 @@ const BiddingProductDetails: React.FC = () => {
                         </label>
                         <Input
                           required
+                          type="tel"
                           value={bidderPhone}
-                          onChange={(e) => setBidderPhone(e.target.value)}
+                          onChange={(e) => {
+                            let value = e.target.value.replace(/[^\d+]/g, "");
+
+                            if (value.startsWith("+234")) {
+                              if (value.length > 14) return;
+                            } else {
+                              if (value.length > 11) return;
+                            }
+
+                            setBidderPhone(value);
+                          }}
                           placeholder="Enter your phone number"
                         />
                       </div>

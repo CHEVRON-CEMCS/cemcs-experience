@@ -31,7 +31,7 @@ export default async function handler(
         '["name","title","featured_image","publish_date","status"]',
       Carousel: '["name","carousel_name","slides"]',
       "Epawn Products":
-        '["name","product_name","price","image","status","description","owner_name","subscriber_id","member_id"]',
+        '["name","product_name","price","image","image_2","image_3","image_4","status","description","owner_name","subscriber_id","member_id","is_deleted"]',
       "Epawn Biddings":
         '["name","name1","price","email","phone","status","creation","product","member_id"]',
     }[endpointStr] || '["name"]';
