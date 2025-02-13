@@ -10,6 +10,7 @@ const navLinks = [
   { name: "Ecommerce Store", url: "/shop" },
   { name: "Insurance", url: "/insurance" },
   { name: "Travels", url: "/reservations" },
+  { name: "E-Pawn", url: "/biddingproducts" },
   { name: "Retiree Platform", url: "https://portal.chevroncemcs.com/#login" },
   { name: "Member Platform", url: "https://member.chevroncemcs.com/login" },
 ];

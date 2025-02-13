@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Navbar } from "../../../components/Navbar";
+import { EPawnNav } from "../../../components/EPawnNav";
 import Footer from "../../../components/Footer";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -49,6 +50,9 @@ interface Product {
   subscriber_id: string;
   is_deleted: number;
   member_id: string;
+  image_2: string;
+  image_3: string;
+  image_4: string;
 }
 
 interface UpdateStatusRequest {
@@ -83,6 +87,7 @@ const BiddingProductDetails: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [status, setStatus] = useState<string>("");
+  const [modalImage, setModalImage] = useState<string | null>(null);
 
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://staging.chevroncemcs.com";
@@ -98,7 +103,9 @@ const BiddingProductDetails: React.FC = () => {
       alert("❌ Cannot delete. A bid has already been accepted.");
       return;
     }
-    const confirmDelete = window.confirm("Are you sure you want to delete?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this EPawn Product?"
+    );
     if (!confirmDelete) return;
 
     setLoading(true);
@@ -179,7 +186,7 @@ const BiddingProductDetails: React.FC = () => {
           axios.get(`/api/Epawn Biddings?product_id=${id}`),
         ]);
 
-        console.log("bidding res:", bidsRes.data.data);
+        console.log("product res:", productRes.data.data);
         setStatus(productRes.data.data.status);
         const product = productRes.data.data;
         if (product.is_deleted !== 1) {
@@ -303,7 +310,7 @@ const BiddingProductDetails: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        <EPawnNav />
         <div className="flex-grow flex items-center justify-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
         </div>
@@ -315,7 +322,7 @@ const BiddingProductDetails: React.FC = () => {
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        <EPawnNav />
         <div className="flex-grow flex items-center justify-center">
           <p className="text-xl text-gray-600">Product not found</p>
         </div>
@@ -343,9 +350,29 @@ const BiddingProductDetails: React.FC = () => {
     }
   };
 
+  const images = [
+    product.image,
+    product.image_2,
+    product.image_3,
+    product.image_4,
+  ].filter(Boolean);
+
+  const getGridClass = (imageCount: number) => {
+    switch (imageCount) {
+      case 1:
+        return "grid-cols-1";
+      case 2:
+        return "grid-cols-2";
+      case 3:
+        return "grid-cols-2 md:grid-cols-3";
+      default:
+        return "grid-cols-2";
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <EPawnNav />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow py-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Product Image */}
@@ -360,14 +387,55 @@ const BiddingProductDetails: React.FC = () => {
               </button>
             )}
             {/* Image Wrapper to prevent overlay issues */}
-            <div className="absolute inset-0">
-              <Image
-                src={imageUrl}
-                alt={product.product_name}
-                fill
-                className="object-contain object-center rounded-lg"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
+            <div className="flex flex-col md:flex-row h-auto md:h-[32.5rem] w-full">
+              <div
+                className={`grid ${getGridClass(images.length)} md:mb-28 gap-4 w-full`}
+              >
+                {images.map((img, index) => (
+                  <div
+                    key={index}
+                    className={`relative overflow-hidden rounded-lg transition-all duration-300 cursor-pointer hover:ring-2 hover:ring-gray-300 ${
+                      images.length === 1 ? "aspect-video" : "aspect-square"
+                    }`}
+                    onClick={() =>
+                      setModalImage(
+                        img ? `${baseUrl}${img}` : `/home${index + 2}.jpg`
+                      )
+                    }
+                  >
+                    <Image
+                      src={img ? `${baseUrl}${img}` : `/home${index + 2}.jpg`}
+                      alt={`${product.name} image ${index + 1}`}
+                      fill
+                      className={`${images.length === 1 ? "object-contain" : "object-cover"} transition-transform duration-300 hover:scale-105`}
+                    />
+                    <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-opacity duration-300" />
+                  </div>
+                ))}
+              </div>
+
+              {modalImage && (
+                <div
+                  className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+                  onClick={() => setModalImage(null)}
+                >
+                  <div className="relative w-full max-w-4xl max-h-[90vh] aspect-square">
+                    <button
+                      onClick={() => setModalImage(null)}
+                      className="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors"
+                    >
+                      <X size={24} />
+                    </button>
+                    <Image
+                      src={modalImage}
+                      alt="Enlarged product image"
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 1536px) 100vw, 1536px"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -455,6 +523,7 @@ const BiddingProductDetails: React.FC = () => {
                           Email (Optional)
                         </label>
                         <Input
+                          required
                           type="email"
                           value={bidderEmail}
                           onChange={(e) => setBidderEmail(e.target.value)}
@@ -466,6 +535,7 @@ const BiddingProductDetails: React.FC = () => {
                           Phone (Optional)
                         </label>
                         <Input
+                          required
                           value={bidderPhone}
                           onChange={(e) => setBidderPhone(e.target.value)}
                           placeholder="Enter your phone number"
