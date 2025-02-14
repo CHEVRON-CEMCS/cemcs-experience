@@ -49,6 +49,7 @@ const Cart = () => {
   const { memberDetails, loginUser } = useAuthStore();
   const [selectedPayment, setSelectedPayment] = useState<string>("");
   const [showModal, setShowModal] = useState(false);
+  const [Modal, setModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [giftCardCode, setGiftCardCode] = useState("");
   const [isGiftCardApplied, setIsGiftCardApplied] = useState(false);
@@ -269,7 +270,7 @@ const Cart = () => {
         toast.error("Not allowed");
         return;
       }
-      setShowModal(true);
+      setModal(true);
       return;
     }
     if (selectedPayment === "Special Deposit") {
@@ -767,10 +768,10 @@ const Cart = () => {
                     "Complete Checkout"
                   )}
                 </Button>
-                {showModal && (
+                {Modal && (
                   <AddPaymentMethod
                     amount={total}
-                    onclose={() => setShowModal(false)}
+                    onclose={() => setModal(false)}
                   />
                 )}
                 <Toaster expand={true} richColors position="bottom-center" />

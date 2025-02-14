@@ -15,6 +15,12 @@ interface ProductFormData {
   price: string;
   description: string;
   images: (File | null)[];
+  dimension: string;
+  specifications?: string;
+  brand: string;
+  condition: string;
+  weight: string;
+  color: string;
 }
 
 const ProductUpload: React.FC = () => {
@@ -27,6 +33,12 @@ const ProductUpload: React.FC = () => {
     price: "",
     description: "",
     images: [null, null, null, null],
+    dimension: "",
+    specifications: "",
+    brand: "",
+    condition: "",
+    weight: "",
+    color: "",
   });
 
   const handleImageChange = (
@@ -115,6 +127,12 @@ const ProductUpload: React.FC = () => {
         image_3: uploadedImages[2] || null,
         image_4: uploadedImages[3] || null,
         product_name: formData.product_name,
+        brand: formData.brand,
+        weight: formData.weight,
+        specifications: formData.specifications,
+        color: formData.color,
+        dimension: formData.dimension,
+        condition: formData.condition,
         price: parseFloat(formData.price.replace(/,/g, "")),
         description: formData.description,
       };
@@ -136,17 +154,28 @@ const ProductUpload: React.FC = () => {
     }
   };
 
+  const handleBack = () => {
+    router.push("/myepawnproducts");
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <EPawnNav />
-      <div className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
+      <div className="flex-grow container mx-auto px-4 py-2">
+        <div className="max-w-2xl mx-auto relative">
+          <Button
+            variant="ghost"
+            className="mb-4 flex items-center gap-2"
+            onClick={handleBack}
+          >
+            ← Back
+          </Button>
           <h1 className="text-3xl font-bold mb-8">Upload Product</h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Product Name *
+                Product Name <span className="text-red-600">*</span>
               </label>
               <Input
                 required
@@ -163,7 +192,7 @@ const ProductUpload: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                Price (₦) *
+                Price (₦) <span className="text-red-600">*</span>
               </label>
               <Input
                 required
@@ -178,7 +207,7 @@ const ProductUpload: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                Description *
+                Description <span className="text-red-600">*</span>
               </label>
               <Textarea
                 required
@@ -191,6 +220,104 @@ const ProductUpload: React.FC = () => {
                 }
                 placeholder="Enter product description"
                 rows={4}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Dimensions
+              </label>
+              <Input
+                value={formData.dimension}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    dimension: e.target.value,
+                  }))
+                }
+                placeholder="Enter dimensions (e.g., 10x5 inches or 25x12 cm)"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Specifications (Optional)
+              </label>
+              <Textarea
+                value={formData.specifications}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    specifications: e.target.value,
+                  }))
+                }
+                placeholder="Enter additional product specifications"
+                rows={3}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Brand <span className="text-red-600">*</span>
+              </label>
+              <Input
+                required
+                value={formData.brand}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, brand: e.target.value }))
+                }
+                placeholder="Enter brand name"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Weight</label>
+              <Input
+                value={formData.weight}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, weight: e.target.value }))
+                }
+                placeholder="Enter weight (e.g., 2kg, 500g)"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Condition <span className="text-red-600">*</span>
+              </label>
+              <select
+                required
+                value={formData.condition}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    condition: e.target.value,
+                  }))
+                }
+                className="w-full p-2 border rounded-md"
+              >
+                <option value="">Select Condition</option>
+                <option value="New">New</option>
+                <option value="1 year">1 Year</option>
+                <option value="2 years">2 Years</option>
+                <option value="3 years">3 Years</option>
+                <option value="4 years">4 Years</option>
+                <option value="5 years">5 Years</option>
+                <option value="6+ years">6+ Years</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Color <span className="text-red-600">*</span>
+              </label>
+              <Input
+                required
+                value={formData.color}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, color: e.target.value }))
+                }
+                placeholder="Enter product color"
               />
             </div>
 

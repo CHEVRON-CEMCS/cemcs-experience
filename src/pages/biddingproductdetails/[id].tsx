@@ -53,6 +53,12 @@ interface Product {
   image_2: string;
   image_3: string;
   image_4: string;
+  dimension: string;
+  specifications: string;
+  weight: string;
+  color: string;
+  condition: string;
+  brand: string;
 }
 
 interface UpdateStatusRequest {
@@ -381,10 +387,21 @@ const BiddingProductDetails: React.FC = () => {
     }
   };
 
+  const handleBack = () => {
+    router.push("/myepawnproducts");
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <EPawnNav />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow py-8 w-full">
+        <Button
+          variant="ghost"
+          className="mb-4 flex items-center gap-2"
+          onClick={handleBack}
+        >
+          ← Back
+        </Button>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Product Image */}
           <div className="relative w-full h-[400px]">
@@ -481,6 +498,41 @@ const BiddingProductDetails: React.FC = () => {
                 </p>
               </div>
             </div>
+
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <div>
+                <p className="text-lg font-semibold">Brand:</p>
+                <p className="text-gray-700">{product.brand || "N/A"}</p>
+              </div>
+              <div>
+                <p className="text-lg font-semibold">Weight:</p>
+                <p className="text-gray-700">{product.weight || "N/A"}</p>
+              </div>
+              <div>
+                <p className="text-lg font-semibold">Dimensions:</p>
+                <p className="text-gray-700">{product.dimension || "N/A"}</p>
+              </div>
+              <div>
+                <p className="text-lg font-semibold">Condition:</p>
+                <p className="text-gray-700">{product.condition || "N/A"}</p>
+              </div>
+              <div className="col-span-2">
+                <p className="text-lg font-semibold">Color:</p>
+                <p className="text-gray-700">{product.color || "N/A"}</p>
+              </div>
+            </div>
+
+            {/* Optional Specifications */}
+            {product.specifications && (
+              <div className="mt-4">
+                <p className="text-lg font-semibold">Specifications:</p>
+                <div className="border border-gray-300 p-2 rounded-md w-full overflow-y-auto">
+                  <p className="text-gray-600 break-words whitespace-normal">
+                    {product.specifications}
+                  </p>
+                </div>
+              </div>
+            )}
 
             {product.status === "0" &&
               memberDetails?.membership_number !== product.member_id && (

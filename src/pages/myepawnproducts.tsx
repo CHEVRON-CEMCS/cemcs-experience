@@ -11,6 +11,7 @@ import { useAuthStore } from "../../store/authStore";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
+import { useRouter } from "next/router";
 
 interface BiddingProduct {
   name: string;
@@ -32,6 +33,7 @@ const MyEpawnProducts: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { memberDetails } = useAuthStore();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -108,10 +110,21 @@ const MyEpawnProducts: React.FC = () => {
     }
   };
 
+  const handleBack = () => {
+    router.push("/myepawnproducts");
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <EPawnNav />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow mt-8 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow mt-4 w-full">
+        <Button
+          variant="ghost"
+          className="mb-4 flex items-center gap-2"
+          onClick={handleBack}
+        >
+          ← Back
+        </Button>
         <div className="flex justify-between items-center">
           <h1 className="text-2xl sm:text-3xl font-bold">My Products</h1>
           <Link href="/epawnupload">
