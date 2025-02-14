@@ -111,7 +111,7 @@ const MyEpawnProducts: React.FC = () => {
   };
 
   const handleBack = () => {
-    router.push("/myepawnproducts");
+    router.push("/biddingproducts");
   };
 
   return (
