@@ -225,18 +225,19 @@ const SubscriberRegistration: React.FC = () => {
                   <div className="border rounded-lg p-4 space-y-2">
                     <h3 className="font-semibold">Undertaking</h3>
                     <ol className="list-decimal list-inside space-y-1">
-                      <li>I will only sell items belonging to me</li>
+                      <li>I will only sell items belonging to me.</li>
                       <li>
-                        I will never sell any illegal contraband or banned items
+                        I will never sell any illegal contraband or banned
+                        items.
                       </li>
                       <li>
                         Any purchase of any of my item is solely my
-                        responsibility to facilitate
+                        responsibility to facilitate.
                       </li>
-                      <li>I will not sell any damaged item</li>
+                      <li>I will not sell any damaged item.</li>
                       <li>
                         I am solely responsible for delivering my item to its
-                        buyer
+                        buyer.
                       </li>
                     </ol>
                   </div>
