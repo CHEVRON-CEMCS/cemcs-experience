@@ -52,10 +52,9 @@ const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose }) => {
             </ul>
 
             <p>
-              I hereby indemnify and hold harmless CEMCS against any and all
-              claims, damages, obligations, losses, liabilities, costs, and
-              expenses (including but not limited to attorney's fees) arising
-              from:
+              I will indemnify and hold CEMCS harmless from any claims, damages,
+              losses, liabilities, costs, and expenses (including attorney's
+              fees) arising from:
             </p>
 
             <ul className="list-disc pl-5 space-y-2">

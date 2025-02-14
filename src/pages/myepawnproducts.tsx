@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navbar } from "../../components/Navbar";
+import { EPawnNav } from "../../components/EPawnNav";
 import {
   BiddingProductCard,
   LoadingBiddingProductCard,
@@ -110,7 +110,7 @@ const MyEpawnProducts: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <EPawnNav />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow mt-8 w-full">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl sm:text-3xl font-bold">My Products</h1>

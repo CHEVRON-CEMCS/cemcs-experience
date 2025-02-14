@@ -25,6 +25,7 @@ interface FormErrors {
   email?: string;
   phone_number?: string;
   address?: string;
+  insuranceType?: string;
 }
 
 const InsuranceForm = ({ cancelRedirectRoute = "/insurance" }) => {
@@ -36,6 +37,7 @@ const InsuranceForm = ({ cancelRedirectRoute = "/insurance" }) => {
     email: "",
     phone_number: "",
     address: "",
+    insuranceType: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,13 +55,17 @@ const InsuranceForm = ({ cancelRedirectRoute = "/insurance" }) => {
     return error;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
     setErrors((prev) => ({ ...prev, [id]: validateField(id, value) }));
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { id, value } = e.target;
     setErrors((prev) => ({ ...prev, [id]: validateField(id, value) }));
   };
@@ -102,6 +108,7 @@ const InsuranceForm = ({ cancelRedirectRoute = "/insurance" }) => {
         address: formData.address,
         email: formData.email,
         phone_number: formData.phone_number,
+        insurance_type: formData.insuranceType,
       };
 
       const response = await axios.post(
@@ -241,6 +248,26 @@ const InsuranceForm = ({ cancelRedirectRoute = "/insurance" }) => {
                   />
                   {errors.address && (
                     <p className="text-sm text-red-500">{errors.address}</p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="insuranceType">Select Insurance Type</Label>
+                  <select
+                    id="insuranceType"
+                    className="w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-400"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={formData.insuranceType}
+                  >
+                    <option value="">Select an option</option>
+                    <option value="vehicle">Vehicle Insurance</option>
+                    <option value="health">Health Insurance</option>
+                    <option value="property">Property Insurance</option>
+                  </select>
+                  {errors.insuranceType && (
+                    <p className="text-sm text-red-500">
+                      {errors.insuranceType}
+                    </p>
                   )}
                 </div>
               </div>

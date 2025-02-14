@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navbar } from "../../components/Navbar";
+import { EPawnNav } from "../../components/EPawnNav";
 import Footer from "../../components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -78,7 +78,7 @@ const SubscriberRegistration: React.FC = () => {
     }
     try {
       if (!formData.i_accept) {
-        toast.error("Please accept the terms and conditions");
+        toast.error("Please accept the Undertaking");
         return;
       }
 
@@ -114,7 +114,7 @@ const SubscriberRegistration: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <EPawnNav />
       <div className="flex-grow container mx-auto px-4 py-8">
         <Card className="max-w-2xl mx-auto">
           <CardHeader>
@@ -218,7 +218,7 @@ const SubscriberRegistration: React.FC = () => {
 
                 <div className="space-y-4">
                   <div className="border rounded-lg p-4 space-y-2">
-                    <h3 className="font-semibold">Terms and Conditions</h3>
+                    <h3 className="font-semibold">Undertaking</h3>
                     <ol className="list-decimal list-inside space-y-1">
                       <li>I will only sell items belonging to me</li>
                       <li>

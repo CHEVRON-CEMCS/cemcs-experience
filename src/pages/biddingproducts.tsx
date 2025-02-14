@@ -100,6 +100,15 @@ const BiddingProducts: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <EPawnNav />
+      <div className="p-2 text-center">
+        <h1 className="text-base font-bold text-red-400">
+          Disclaimer: The products displayed here are offered by individual
+          members of the cooperative. CEMCS assumes no responsibility or
+          liability for the products, including their quality, safety, or any
+          related issues.
+        </h1>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow mt-8 w-full">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl sm:text-3xl font-bold">
