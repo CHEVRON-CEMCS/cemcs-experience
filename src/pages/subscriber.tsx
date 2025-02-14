@@ -45,6 +45,10 @@ const SubscriberRegistration: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked, files } = e.target;
 
+    if (name === "account_number" && value.length > 10) {
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]:
@@ -191,6 +195,7 @@ const SubscriberRegistration: React.FC = () => {
                     value={formData.account_number}
                     onChange={handleInputChange}
                     placeholder="Enter account number"
+                    minLength={10}
                   />
                 </div>
 
